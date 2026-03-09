@@ -1,5 +1,21 @@
 import { create } from 'zustand'
 
+export interface Experience {
+    id: string
+    role: string
+    company: string
+    employmentType: string
+    startDate: string
+    endDate: string
+    isCurrent: boolean
+    location: string
+    locationType: string
+    details: string
+    skills: string[]
+    tools: string[]
+    isCollapsed: boolean
+}
+
 interface ProfileState {
     // Dialog States
     isBioDialogOpen: boolean
@@ -37,20 +53,12 @@ interface ProfileState {
     resetBioForm: () => void
 
     // Experience Form State
-    experienceForm: {
-        title: string
-        employmentType: string
-        companyName: string
-        location: string
-        isCurrent: boolean
-        startMonth: string
-        startYear: string
-        endMonth: string
-        endYear: string
-        description: string
-    }
-    setExperienceForm: (data: Partial<ProfileState['experienceForm']>) => void
-    resetExperienceForm: () => void
+    experiences: Experience[]
+    addExperience: () => void
+    updateExperience: (id: string, data: Partial<Experience>) => void
+    removeExperience: (id: string) => void
+    toggleExperienceCollapse: (id: string) => void
+    resetExperiences: () => void
 
     // Skills Form State
     skillsForm: {
@@ -147,34 +155,70 @@ export const useProfileStore = create<ProfileState>((set) => ({
     }),
 
     // Experience Form State
-    experienceForm: {
-        title: '',
+    experiences: [{
+        id: 'default-experience',
+        role: '',
+        company: '',
         employmentType: '',
-        companyName: '',
-        location: '',
+        startDate: '',
+        endDate: '',
         isCurrent: false,
-        startMonth: '',
-        startYear: '',
-        endMonth: '',
-        endYear: '',
-        description: '',
-    },
-    setExperienceForm: (data) => set((state) => ({
-        experienceForm: { ...state.experienceForm, ...data }
+        location: '',
+        locationType: '',
+        details: '',
+        skills: [],
+        tools: [],
+        isCollapsed: false,
+    }],
+    addExperience: () => set((state) => ({
+        experiences: [
+            ...state.experiences,
+            {
+                id: Math.random().toString(36).substring(2, 9),
+                role: '',
+                company: '',
+                employmentType: '',
+                startDate: '',
+                endDate: '',
+                isCurrent: false,
+                location: '',
+                locationType: '',
+                details: '',
+                skills: [],
+                tools: [],
+                isCollapsed: false,
+            }
+        ]
     })),
-    resetExperienceForm: () => set({
-        experienceForm: {
-            title: '',
+    updateExperience: (id, data) => set((state) => ({
+        experiences: state.experiences.map((exp) =>
+            exp.id === id ? { ...exp, ...data } : exp
+        )
+    })),
+    removeExperience: (id) => set((state) => ({
+        experiences: state.experiences.filter((exp) => exp.id !== id)
+    })),
+    toggleExperienceCollapse: (id) => set((state) => ({
+        experiences: state.experiences.map((exp) =>
+            exp.id === id ? { ...exp, isCollapsed: !exp.isCollapsed } : exp
+        )
+    })),
+    resetExperiences: () => set({
+        experiences: [{
+            id: 'default-experience',
+            role: '',
+            company: '',
             employmentType: '',
-            companyName: '',
-            location: '',
+            startDate: '',
+            endDate: '',
             isCurrent: false,
-            startMonth: '',
-            startYear: '',
-            endMonth: '',
-            endYear: '',
-            description: '',
-        }
+            location: '',
+            locationType: '',
+            details: '',
+            skills: [],
+            tools: [],
+            isCollapsed: false,
+        }]
     }),
 
     // Skills Form State

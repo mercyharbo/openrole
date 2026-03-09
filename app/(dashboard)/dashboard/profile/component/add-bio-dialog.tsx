@@ -38,14 +38,14 @@ export function AddBioDialog() {
 
   return (
     <Dialog open={isBioDialogOpen} onOpenChange={setBioDialogOpen}>
-      <DialogContent className="flex h-[80dvh] max-w-2xl flex-col gap-0 overflow-hidden p-0">
+      <DialogContent className="flex h-[80dvh] w-full max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
         <DialogHeader className="flex flex-row items-center justify-between border-b border-gray-100 px-6 py-4 dark:border-zinc-800">
           <DialogTitle className="text-gray-900 dark:text-white">
             Bio
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 space-y-6 overflow-y-auto p-6">
+        <div className="scrollbar-hide flex-1 space-y-6 overflow-y-auto p-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {/* Photo Upload Section */}
           <div className="flex items-center gap-6 rounded-lg bg-gray-50 p-6 dark:bg-zinc-900/50">
             <div className="flex size-24 shrink-0 items-center justify-center rounded-2xl border border-gray-100 bg-gray-200 dark:border-zinc-800 dark:bg-zinc-900">
@@ -73,7 +73,7 @@ export function AddBioDialog() {
                 </label>
                 <Input
                   placeholder="John"
-                  className="bg-white dark:bg-zinc-950"
+                  className="h-10 bg-white dark:bg-zinc-950"
                   value={bioForm.firstName}
                   onChange={(e) => setBioForm({ firstName: e.target.value })}
                 />
@@ -84,7 +84,7 @@ export function AddBioDialog() {
                 </label>
                 <Input
                   placeholder="Osimhen"
-                  className="bg-white dark:bg-zinc-950"
+                  className="h-10 bg-white dark:bg-zinc-950"
                   value={bioForm.lastName}
                   onChange={(e) => setBioForm({ lastName: e.target.value })}
                 />
@@ -99,7 +99,7 @@ export function AddBioDialog() {
                 value={bioForm.role}
                 onValueChange={(value) => setBioForm({ role: value })}
               >
-                <SelectTrigger className="bg-white dark:bg-zinc-950">
+                <SelectTrigger size="md" className="bg-white dark:bg-zinc-950">
                   <SelectValue placeholder="Select suitable role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -133,7 +133,10 @@ export function AddBioDialog() {
                 Featured skills
               </label>
               <Select>
-                <SelectTrigger className="bg-white text-gray-400 italic dark:bg-zinc-950">
+                <SelectTrigger
+                  size="md"
+                  className="bg-white text-gray-400 italic dark:bg-zinc-950"
+                >
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
                 <SelectContent>{/* Skills will go here */}</SelectContent>
@@ -148,7 +151,10 @@ export function AddBioDialog() {
                 value={bioForm.nationality}
                 onValueChange={(value) => setBioForm({ nationality: value })}
               >
-                <SelectTrigger className="bg-white text-gray-400 italic dark:bg-zinc-950">
+                <SelectTrigger
+                  size="md"
+                  className="bg-white text-gray-400 italic dark:bg-zinc-950"
+                >
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
                 <SelectContent>
@@ -169,7 +175,10 @@ export function AddBioDialog() {
                     setBioForm({ phoneCountryCode: value })
                   }
                 >
-                  <SelectTrigger className="w-[100px] bg-white dark:bg-zinc-950">
+                  <SelectTrigger
+                    size="md"
+                    className="w-[100px] bg-white dark:bg-zinc-950"
+                  >
                     <SelectValue placeholder="+ 234" />
                   </SelectTrigger>
                   <SelectContent>
@@ -179,7 +188,7 @@ export function AddBioDialog() {
                 </Select>
                 <Input
                   placeholder="012 345 6789"
-                  className="flex-1 bg-white dark:bg-zinc-950"
+                  className="h-10 flex-1 bg-white dark:bg-zinc-950"
                   value={bioForm.phoneNumber}
                   onChange={(e) => setBioForm({ phoneNumber: e.target.value })}
                 />
@@ -192,7 +201,7 @@ export function AddBioDialog() {
               </label>
               <Input
                 placeholder="Input URL link"
-                className="bg-white italic placeholder:text-gray-300 dark:bg-zinc-950 dark:placeholder:text-white/20"
+                className="h-10 bg-white italic placeholder:text-gray-300 dark:bg-zinc-950 dark:placeholder:text-white/20"
                 value={bioForm.linkedin}
                 onChange={(e) => setBioForm({ linkedin: e.target.value })}
               />
@@ -204,7 +213,7 @@ export function AddBioDialog() {
               </label>
               <Input
                 placeholder="Input URL link"
-                className="bg-white italic placeholder:text-gray-300 dark:bg-zinc-950 dark:placeholder:text-white/20"
+                className="h-10 bg-white italic placeholder:text-gray-300 dark:bg-zinc-950 dark:placeholder:text-white/20"
                 value={bioForm.twitter}
                 onChange={(e) => setBioForm({ twitter: e.target.value })}
               />

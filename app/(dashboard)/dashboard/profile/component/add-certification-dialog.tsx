@@ -65,19 +65,19 @@ export function AddCertificationDialog() {
       open={isCertificationDialogOpen}
       onOpenChange={setCertificationDialogOpen}
     >
-      <DialogContent className="max-w-2xl overflow-hidden p-0">
+      <DialogContent className="flex h-[80dvh] w-full max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 border-b border-gray-100 px-6 py-4">
           <DialogTitle className="">Certification</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-5 bg-white p-6">
+        <div className="scrollbar-hide flex-1 space-y-5 overflow-y-auto bg-white p-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="space-y-2">
             <label className="block text-sm text-gray-600">
               Issuing Organization
             </label>
             <Input
               placeholder="Enter organization name"
-              className="h-11 rounded-lg border-gray-200 focus:ring-primary/20"
+              className="h-10 rounded-lg border-gray-200 focus:ring-primary/20"
               value={formData.issuingOrganization}
               onChange={(e) =>
                 setFormData({
@@ -94,7 +94,7 @@ export function AddCertificationDialog() {
             </label>
             <Input
               placeholder="Enter certificate title"
-              className="h-11 rounded-lg border-gray-200 focus:ring-primary/20"
+              className="h-10 rounded-lg border-gray-200 focus:ring-primary/20"
               value={formData.certificateTitle}
               onChange={(e) =>
                 setFormData({ ...formData, certificateTitle: e.target.value })
@@ -114,7 +114,7 @@ export function AddCertificationDialog() {
               >
                 <SelectTrigger
                   size="md"
-                  className="h-10 w-full border-gray-200 transition-all focus:ring-primary/20 md:h-11"
+                  className="w-full border-gray-200 transition-all focus:ring-primary/20"
                 >
                   <SelectValue placeholder="Select one" />
                 </SelectTrigger>
@@ -138,7 +138,7 @@ export function AddCertificationDialog() {
               >
                 <SelectTrigger
                   size="md"
-                  className="h-10 w-full border-gray-200 transition-all focus:ring-primary/20 md:h-11"
+                  className="w-full border-gray-200 transition-all focus:ring-primary/20"
                 >
                   <SelectValue placeholder="Select one" />
                 </SelectTrigger>
@@ -157,7 +157,7 @@ export function AddCertificationDialog() {
             <label className="block text-sm text-gray-600">Link</label>
             <Input
               placeholder="Paste certificate verification link"
-              className="h-11 rounded-lg border-gray-200 focus:ring-primary/20"
+              className="h-10 rounded-lg border-gray-200 focus:ring-primary/20"
               value={formData.link}
               onChange={(e) =>
                 setFormData({ ...formData, link: e.target.value })
