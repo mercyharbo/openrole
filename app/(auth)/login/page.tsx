@@ -36,20 +36,16 @@ export default function AuthPage() {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
       remember: false,
     },
   })
-
-  const email = watch("email")
-  const password = watch("password")
-  const isFormValid = email && password
 
   const { post } = useApi()
 
@@ -96,7 +92,7 @@ export default function AuthPage() {
         </Button>
 
         <div className="flex items-center gap-3 text-sm dark:text-gray-400">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Button
             variant={"link"}
             className="h-fit px-0 font-semibold text-primary no-underline"
@@ -230,7 +226,7 @@ export default function AuthPage() {
           {/* Submit Button */}
           <Button
             type="submit"
-            disabled={isSubmitting || !isFormValid}
+            disabled={isSubmitting || !isValid}
             className="flex h-12 w-full items-center justify-center gap-2 font-semibold transition-all dark:text-white"
           >
             Sign In

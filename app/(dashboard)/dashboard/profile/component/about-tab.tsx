@@ -109,7 +109,7 @@ export function AboutTab() {
                   Skills
                 </h3>
                 <p className="text-base text-gray-500 dark:text-gray-400">
-                  Show the skills you're best at.
+                  Show the skills you&apos;re best at.
                 </p>
               </div>
               <Button

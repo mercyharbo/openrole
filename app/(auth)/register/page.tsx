@@ -57,7 +57,9 @@ export default function RegisterPage() {
 
       <RadioGroup
         value={userRole}
-        onValueChange={(value) => setUserRole(value as any)}
+        onValueChange={(value) =>
+          setUserRole(value as "applicant" | "recruiter")
+        }
         className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
       >
         {roles.map((role) => (
@@ -69,7 +71,7 @@ export default function RegisterPage() {
                 ? "border-primary bg-primary/5 dark:bg-primary/10"
                 : "bg-white dark:bg-zinc-950"
             )}
-            onClick={() => setUserRole(role.id as any)}
+            onClick={() => setUserRole(role.id as "applicant" | "recruiter")}
           >
             <div className="flex items-center justify-between">
               <RadioGroupItem

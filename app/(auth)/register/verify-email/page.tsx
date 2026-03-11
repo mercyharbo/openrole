@@ -120,7 +120,7 @@ export default function VerifyEmailPage() {
 
           <div className="flex items-center gap-2 text-sm">
             <span className="text-black dark:text-gray-400">
-              Didn't receive the code?
+              Didn&apos;t receive the code?
             </span>
             <button
               disabled={registrationTimer > 0}

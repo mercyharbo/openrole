@@ -50,7 +50,7 @@ export function ProjectsTab() {
           <>
             <h3 className="text-lg text-black dark:text-white">Oops!!!</h3>
             <p className="text-gray-400 dark:text-gray-500">
-              You haven't added any projects to your profile yet.
+              You haven&apos;t added any projects to your profile yet.
             </p>
           </>
         ) : (

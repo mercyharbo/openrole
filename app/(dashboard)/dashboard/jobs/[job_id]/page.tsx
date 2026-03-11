@@ -5,7 +5,7 @@ export default async function page({
 }: {
   params: Promise<{ job_id: string }>
 }) {
-  const { job_id } = await params
+  await params
 
   return <JobDetails />
 }

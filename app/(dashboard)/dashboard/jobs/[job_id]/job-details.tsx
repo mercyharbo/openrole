@@ -123,10 +123,10 @@ export default function JobDetails() {
                   products. The role involves close collaboration with product
                   managers and engineers to turn complex requirements into
                   clear, user-centered solutions. This position is integral to
-                  our design team's dynamics, and impacts how users perceive and
-                  interact with our products, driving overall satisfaction and
-                  brand loyalty. Embedded within an innovative environment,
-                  you'll collaborate with fellow designe...{" "}
+                  our design team&apos;s dynamics, and impacts how users
+                  perceive and interact with our products, driving overall
+                  satisfaction and brand loyalty. Embedded within an innovative
+                  environment, you&apos;ll collaborate with fellow designe...{" "}
                   <button className="font-bold text-gray-950 dark:text-white">
                     Read more...
                   </button>
@@ -157,7 +157,7 @@ export default function JobDetails() {
                     the product lifecycle
                   </li>
                   <li>
-                    Maintain and contribute to the company's design system
+                    Maintain and contribute to the company&apos;s design system
                   </li>
                   <li>
                     Present design solutions and rationale to stakeholders

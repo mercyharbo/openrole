@@ -94,7 +94,7 @@ export const useApi = () => {
      * @param data - Optional request payload
      * @returns A promise resolving to an object with { data, error }
      */
-    const request = async (method: string, endpoint: string, data?: any) => {
+    const request = async (method: string, endpoint: string, data?: unknown) => {
         try {
             const response = await api({
                 method,
@@ -102,23 +102,29 @@ export const useApi = () => {
                 data,
             })
             return { data: response.data, error: null }
-        } catch (error: any) {
+        } catch (err: unknown) {
+            let errorMessage = 'Request failed'
+            if (axios.isAxiosError(err)) {
+                errorMessage =
+                    err.response?.data?.message ||
+                    err.response?.data?.data?.message ||
+                    err.message ||
+                    errorMessage
+            } else if (err instanceof Error) {
+                errorMessage = err.message
+            }
             return {
                 data: null,
-                error:
-                    error.response?.data?.message ||
-                    error.response?.data?.data?.message ||
-                    error.message ||
-                    'Request failed',
+                error: errorMessage,
             }
         }
     }
 
     return {
         get: (endpoint: string) => request('GET', endpoint),
-        post: (endpoint: string, data: any) => request('POST', endpoint, data),
-        put: (endpoint: string, data: any) => request('PUT', endpoint, data),
-        patch: (endpoint: string, data: any) => request('PATCH', endpoint, data),
+        post: (endpoint: string, data: unknown) => request('POST', endpoint, data),
+        put: (endpoint: string, data: unknown) => request('PUT', endpoint, data),
+        patch: (endpoint: string, data: unknown) => request('PATCH', endpoint, data),
         delete: (endpoint: string) => request('DELETE', endpoint),
     }
 }

@@ -30,7 +30,7 @@ const DUMMY_EXPERIENCES: Experience[] = [
     locationType: "Remote",
     employmentType: "Full-time",
     details:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 15...",
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&apos;s standard dummy text ever since the 15...",
     skills: ["User Interface", "Prototyping", "Wireframing"],
     tools: ["Figma", "Sketch"],
     isCollapsed: false,
@@ -127,7 +127,7 @@ export function ExperienceTab() {
         <CardContent className="flex min-h-[400px] flex-col items-center justify-center gap-2 text-center">
           <h3 className="text-lg text-black dark:text-white">Oops!!!</h3>
           <p className="text-gray-400 dark:text-gray-500">
-            You haven't added any work experience to your profile yet.
+            You haven&apos;t added any work experience to your profile yet.
           </p>
         </CardContent>
       </Card>

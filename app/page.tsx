@@ -225,8 +225,8 @@ export default function LandingPage() {
                     Status: Thriving
                   </p>
                   <p className="text-xl leading-tight font-black italic">
-                    "xjobs applied for 50 roles while I was sleeping. I got 3
-                    interviews by morning."
+                    &quot;xjobs applied for 50 roles while I was sleeping. I got
+                    3 interviews by morning.&quot;
                   </p>
                 </div>
               </div>
@@ -325,9 +325,12 @@ function FeatureItem({
     <div className="group flex flex-col gap-6">
       <div className="flex size-14 scale-100 items-center justify-center rounded-2xl border border-primary/10 bg-primary/5 text-primary transition-all duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-white">
         {React.isValidElement(icon)
-          ? React.cloneElement(icon as React.ReactElement<any>, {
-              className: "size-6",
-            })
+          ? React.cloneElement(
+              icon as React.ReactElement<Record<string, unknown>>,
+              {
+                className: "size-6",
+              }
+            )
           : icon}
       </div>
       <div>

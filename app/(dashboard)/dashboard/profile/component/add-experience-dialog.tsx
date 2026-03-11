@@ -272,7 +272,7 @@ export function AddExperienceDialog() {
                       htmlFor={`current-${exp.id}`}
                       className="cursor-pointer text-sm font-medium text-gray-600 dark:text-gray-400"
                     >
-                      I'm currently working in this role
+                      I&apos;m currently working in this role
                     </label>
                   </div>
 

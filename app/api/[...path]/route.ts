@@ -62,7 +62,8 @@ async function handleRequest(
             },
             { status: response.status }
         )
-    } catch (error: any) {
+    } catch (err: unknown) {
+        const error = err as Error
         console.error('API Proxy Error:', error)
         return NextResponse.json(
             {

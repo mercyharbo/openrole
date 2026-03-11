@@ -34,29 +34,6 @@ import {
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
-const metrics = [
-  {
-    title: "Total Jobs",
-    value: "05",
-    icon: Briefcase,
-  },
-  {
-    title: "Open Jobs",
-    value: "02",
-    icon: Inbox,
-  },
-  {
-    title: "Total Applicants",
-    value: "10.2k",
-    icon: Users,
-  },
-  {
-    title: "Total Shortlisted",
-    value: "45",
-    icon: UserPlus,
-  },
-]
-
 const chartData = [
   { day: "Sun", value: 180 },
   { day: "Mon", value: 60 },
@@ -79,7 +56,7 @@ const chartConfig = {
  * Displays key metrics and pending applications.
  */
 export default function OverviewPage() {
-  const { dashboardData, isLoading } = useRecruiterDashboard()
+  const { dashboardData } = useRecruiterDashboard()
   const { recruiterProfile } = useRecruiterProfile()
 
   console.log("Recruiter Dashboard Data:", dashboardData)

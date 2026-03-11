@@ -1,7 +1,8 @@
 import api from '@/lib/api'
+import axios from 'axios'
 import useSWR, { SWRConfiguration } from 'swr'
 
-export const useFetch = <T = any>(
+export const useFetch = <T = unknown>(
     endpoint: string | null,
     config?: SWRConfiguration
 ) => {
@@ -10,8 +11,13 @@ export const useFetch = <T = any>(
             // endpoint starts with /api/ already because we added it in useSWR key
             const response = await api.get(url)
             return response.data
-        } catch (error: any) {
-            throw error.response?.data?.error || error.message || 'Fetch failed'
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                // Axios errors have a response object with potential data
+                const message = err.response?.data?.error || err.message || 'Fetch failed'
+                throw message
+            }
+            throw err instanceof Error ? err.message : 'Fetch failed'
         }
     }
 
