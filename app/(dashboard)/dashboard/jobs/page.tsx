@@ -7,8 +7,9 @@ import { Separator } from "@/components/ui/separator"
 import { cn, formatRelativeTime } from "@/lib/utils"
 import { Briefcase } from "lucide-react"
 
-import { JobCardSkeleton } from "@/components/dashboard/job-card-skeleton"
 import { useJobs } from "@/hooks/use-queries"
+import { useProfileStore } from "@/lib/store/profile-store"
+import { ViewApplicationDialog } from "./components/view-application-dialog"
 
 const stats = [
   { label: "Best Matches", active: true },
@@ -21,12 +22,14 @@ const stats = [
  * Displays job matches and pending applications.
  */
 export default function OverviewPage() {
-  const { jobs, error, isLoading } = useJobs()
+  const { jobs } = useJobs()
+  const { isViewApplicationDialogOpen, setViewApplicationDialogOpen } =
+    useProfileStore()
 
   return (
     <main className="flex flex-col gap-8">
       {/* Jobs Section */}
-      <Card className="flex flex-col gap-4 rounded-lg bg-white px-0 py-0 dark:bg-zinc-950">
+      <Card className="px-0 py-0">
         <CardHeader className="flex flex-col gap-1 p-5">
           <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
             Jobs
@@ -54,7 +57,7 @@ export default function OverviewPage() {
       </Card>
 
       {/* Pending Applications Section */}
-      <Card className="flex flex-col px-0">
+      <Card className="px-0">
         <CardHeader>
           <CardTitle className="text-lg font-bold">
             Pending Applications
@@ -62,20 +65,14 @@ export default function OverviewPage() {
         </CardHeader>
         <Separator />
         <CardContent className="3xl:grid-cols-3 grid grid-cols-1 gap-6 pt-6 xl:grid-cols-2">
-          {isLoading ? (
-            Array.from({ length: 6 }).map((_, i) => <JobCardSkeleton key={i} />)
-          ) : error ? (
-            <div className="col-span-full py-12 text-center text-gray-500">
-              Failed to load applications. Please try again later.
-            </div>
-          ) : !jobs || jobs.length === 0 ? (
+          {!jobs || jobs.length === 0 ? (
             <div className="col-span-full py-12 text-center text-gray-500">
               No pending applications found.
             </div>
           ) : (
             jobs.map((job) => (
-              <Card key={job.id} className="flex flex-col bg-muted p-5">
-                <div className="mb-4 flex items-start justify-between">
+              <Card key={job.id} className="flex flex-col gap-5 bg-muted p-5">
+                <div className="flex items-start justify-between">
                   <div className="flex gap-4">
                     <div className="flex size-12 items-center justify-center rounded-lg border border-gray-100 bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900">
                       <Briefcase className="size-6 text-gray-400 dark:text-gray-500" />
@@ -105,7 +102,7 @@ export default function OverviewPage() {
                   </span>
                 </div>
 
-                <div className="mb-4 flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Badge
                     variant="outline"
                     className="flex items-center gap-1 rounded-md border-gray-200 px-2.5 py-1 font-semibold text-black dark:border-zinc-800 dark:text-white"
@@ -127,11 +124,11 @@ export default function OverviewPage() {
                   </Badge>
                 </div>
 
-                <p className="mb-6 line-clamp-2 text-sm leading-relaxed text-gray-700">
+                <p className="line-clamp-2 flex-1 text-sm leading-relaxed text-gray-700">
                   {job.raw_description}
                 </p>
 
-                <div className="mt-auto flex flex-col gap-4">
+                <div className="flex flex-col gap-4">
                   <p className="text-xs text-gray-600">
                     Applied: {formatRelativeTime(job.created_at)}
                   </p>
@@ -142,7 +139,10 @@ export default function OverviewPage() {
                     >
                       Job description
                     </Button>
-                    <Button className="h-11 font-semibold dark:text-white">
+                    <Button
+                      onClick={() => setViewApplicationDialogOpen(true)}
+                      className="h-11 font-semibold dark:text-white"
+                    >
                       View application
                     </Button>
                   </div>
@@ -152,6 +152,11 @@ export default function OverviewPage() {
           )}
         </CardContent>
       </Card>
+
+      <ViewApplicationDialog
+        isOpen={isViewApplicationDialogOpen}
+        onOpenChange={setViewApplicationDialogOpen}
+      />
     </main>
   )
 }

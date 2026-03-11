@@ -211,7 +211,7 @@ export default function OverviewPage() {
               </ChartContainer>
 
               {/* Chart Date Range Footer */}
-              <div className="mt-4 flex items-center gap-4 py-2">
+              <div className="flex items-center gap-4 py-2">
                 <div className="h-px flex-1 bg-gray-100 dark:bg-zinc-800" />
                 <span className="shrink-0 text-xs text-gray-400 dark:text-gray-500">
                   Feb 26 - Mar 4

@@ -105,7 +105,11 @@ export const useApi = () => {
         } catch (error: any) {
             return {
                 data: null,
-                error: error.response?.data?.message || error.message || 'Request failed',
+                error:
+                    error.response?.data?.message ||
+                    error.response?.data?.data?.message ||
+                    error.message ||
+                    'Request failed',
             }
         }
     }

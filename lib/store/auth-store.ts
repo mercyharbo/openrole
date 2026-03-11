@@ -22,10 +22,12 @@ interface AuthState {
     setPasswordValue: (value: string) => void
     confirmPasswordValue: string
     setConfirmPasswordValue: (value: string) => void
-    userRole: 'talent' | 'employer' | ''
-    setUserRole: (role: 'talent' | 'employer' | '') => void
+    userRole: 'applicant' | 'recruiter' | ''
+    setUserRole: (role: 'applicant' | 'recruiter' | '') => void
     companyName: string
     setCompanyName: (name: string) => void
+    username: string
+    setUsername: (name: string) => void
     user: User | null
     setUser: (user: User | null) => void
     accessToken: string
@@ -60,6 +62,8 @@ export const useAuthStore = create<AuthState>()(
             setUserRole: (userRole) => set({ userRole }),
             companyName: '',
             setCompanyName: (companyName) => set({ companyName }),
+            username: '',
+            setUsername: (username) => set({ username }),
             user: null,
             setUser: (user) => set({ user }),
             accessToken: cookies.get('access_token') || '',

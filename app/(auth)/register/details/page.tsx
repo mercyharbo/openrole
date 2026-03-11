@@ -14,11 +14,15 @@ import { useEffect, useState } from "react"
 export default function DetailsPage() {
   const router = useRouter()
   const {
+    userRole,
     registrationEmail,
+    setRegistrationEmail,
     firstName,
     setFirstName,
     lastName,
     setLastName,
+    username,
+    setUsername,
     passwordValue,
     setPasswordValue,
     confirmPasswordValue,
@@ -38,12 +42,12 @@ export default function DetailsPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  // Redirect if no email
+  // Redirect if no role selected
   useEffect(() => {
-    if (!registrationEmail) {
+    if (!userRole) {
       router.replace("/register")
     }
-  }, [registrationEmail, router])
+  }, [userRole, router])
 
   const passwordRequirements = [
     { label: "At least one uppercase letter.", regex: /[A-Z]/ },
@@ -55,66 +59,97 @@ export default function DetailsPage() {
   const isPasswordValid = passwordRequirements.every((req) =>
     req.regex.test(passwordValue)
   )
+
   const isFormValid =
+    registrationEmail.trim() !== "" &&
     firstName.trim() !== "" &&
     lastName.trim() !== "" &&
-    companyName.trim() !== "" &&
+    (userRole === "recruiter"
+      ? companyName.trim() !== ""
+      : username.trim() !== "") &&
     isPasswordValid &&
     passwordValue === confirmPasswordValue
 
   /**
-   * Finalizes registration by sending data to the API.
-   * Concatenates name fields, includes company information,
-   * handles session storage on success, and redirects to home.
+   * Finalizes registration by sending data to the appropriate API endpoint.
+   * Handles both Applicant and Recruiter flows with specific payloads.
    */
   const handleComplete = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setRegistrationError(null)
 
-    const payload = {
-      email: registrationEmail,
-      password: passwordValue,
-      full_name: `${firstName} ${lastName}`.trim(),
-      company_name: companyName,
+    const fullName = `${firstName} ${lastName}`.trim()
+
+    let endpoint = ""
+    let payload = {}
+
+    if (userRole === "applicant") {
+      endpoint = "/applicants/register"
+      payload = {
+        email: registrationEmail,
+        password: passwordValue,
+        full_name: fullName,
+        username: username,
+      }
+    } else {
+      endpoint = "/auth/register"
+      payload = {
+        email: registrationEmail,
+        password: passwordValue,
+        full_name: fullName,
+        company_name: companyName,
+      }
     }
 
-    const response = await post("/auth/register", payload)
+    const response = await post(endpoint, payload)
 
     if (response.error) {
       console.error("Registration failed:", response.error)
       setRegistrationError(response.error)
+    } else if (response.data && response.data.success === false) {
+      setRegistrationError(response.data.message || "Registration failed")
     } else {
       const regData = response.data as RegistrationResponse
-
-      // Store tokens and user data
       setTokens(regData.tokens.access_token, regData.tokens.refresh_token)
       setUser(regData.data)
-
       console.log("Registration success:", regData.message)
-
-      // Redirect directly to home (skipping role for now)
       router.push("/dashboard")
     }
 
     setIsSubmitting(false)
   }
 
-  if (!registrationEmail) return null
+  if (!userRole) return null
 
   return (
     <div className="3xl:max-w-2xl w-full max-w-sm space-y-8 sm:max-w-md md:max-w-lg lg:max-w-xl">
       <div className="space-y-3">
         <h1 className="text-3xl font-bold text-black dark:text-white">
-          Sign up
+          Complete your registration
         </h1>
         <p className="text-label text-sm dark:text-gray-400">
-          To get started, fill in the information
+          As a {userRole === "applicant" ? "Talent" : "Employer"}, please
+          provide your details
         </p>
       </div>
 
       <form onSubmit={handleComplete} className="space-y-10">
         <div className="space-y-6">
+          {/* Email Address */}
+          <div className="flex flex-col gap-3">
+            <label className="text-label text-sm dark:text-gray-300">
+              Email Address*
+            </label>
+            <Input
+              type="email"
+              placeholder="ezeumechukwu@gmail.com"
+              value={registrationEmail}
+              onChange={(e) => setRegistrationEmail(e.target.value)}
+              className="h-12 rounded-lg border-slate-200 bg-slate-50/50 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+            />
+          </div>
+
           {/* Name Row */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-3">
@@ -141,18 +176,32 @@ export default function DetailsPage() {
             </div>
           </div>
 
-          {/* Company Name Field */}
-          <div className="flex flex-col gap-3">
-            <label className="text-label text-sm dark:text-gray-300">
-              Company Name*
-            </label>
-            <Input
-              placeholder="Enter company name"
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              className="h-12 rounded-lg border-slate-200 bg-slate-50/50 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
-            />
-          </div>
+          {/* Role specific field */}
+          {userRole === "recruiter" ? (
+            <div className="flex flex-col gap-3">
+              <label className="text-label text-sm dark:text-gray-300">
+                Company Name*
+              </label>
+              <Input
+                placeholder="Enter company name"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                className="h-12 rounded-lg border-slate-200 bg-slate-50/50 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+              />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <label className="text-label text-sm dark:text-gray-300">
+                Username*
+              </label>
+              <Input
+                placeholder="Enter username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="h-12 rounded-lg border-slate-200 bg-slate-50/50 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+              />
+            </div>
+          )}
 
           {/* Password Field */}
           <div className="flex flex-col gap-3">

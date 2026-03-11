@@ -16,6 +16,16 @@ export interface Experience {
     isCollapsed: boolean
 }
 
+export interface Project {
+    id: string
+    title: string
+    description: string
+    link: string
+    skills: string[]
+    tools: string[]
+    image?: string
+}
+
 interface ProfileState {
     // Dialog States
     isBioDialogOpen: boolean
@@ -35,6 +45,12 @@ interface ProfileState {
 
     isAwardDialogOpen: boolean
     setAwardDialogOpen: (isOpen: boolean) => void
+
+    isProjectsDialogOpen: boolean
+    setProjectsDialogOpen: (isOpen: boolean) => void
+
+    isViewApplicationDialogOpen: boolean
+    setViewApplicationDialogOpen: (isOpen: boolean) => void
 
     // Bio Form State
     bioForm: {
@@ -59,6 +75,13 @@ interface ProfileState {
     removeExperience: (id: string) => void
     toggleExperienceCollapse: (id: string) => void
     resetExperiences: () => void
+
+    // Projects State
+    projects: Project[]
+    addProject: (project: Omit<Project, 'id'>) => void
+    updateProject: (id: string, data: Partial<Project>) => void
+    removeProject: (id: string) => void
+    resetProjects: () => void
 
     // Skills Form State
     skillsForm: {
@@ -101,6 +124,18 @@ interface ProfileState {
     }
     setAwardForm: (data: Partial<ProfileState['awardForm']>) => void
     resetAwardForm: () => void
+
+    // Project Form State
+    projectForm: {
+        title: string
+        description: string
+        link: string
+        skills: string[]
+        tools: string[]
+        image?: string
+    }
+    setProjectForm: (data: Partial<ProfileState['projectForm']>) => void
+    resetProjectForm: () => void
 }
 
 export const useProfileStore = create<ProfileState>((set) => ({
@@ -122,6 +157,12 @@ export const useProfileStore = create<ProfileState>((set) => ({
 
     isAwardDialogOpen: false,
     setAwardDialogOpen: (isOpen) => set({ isAwardDialogOpen: isOpen }),
+
+    isProjectsDialogOpen: false,
+    setProjectsDialogOpen: (isOpen) => set({ isProjectsDialogOpen: isOpen }),
+
+    isViewApplicationDialogOpen: false,
+    setViewApplicationDialogOpen: (isOpen) => set({ isViewApplicationDialogOpen: isOpen }),
 
     // Bio Form State
     bioForm: {
@@ -221,6 +262,19 @@ export const useProfileStore = create<ProfileState>((set) => ({
         }]
     }),
 
+    // Projects State
+    projects: [],
+    addProject: (project) => set((state) => ({
+        projects: [...state.projects, { ...project, id: Math.random().toString(36).substring(2, 9) }]
+    })),
+    updateProject: (id, data) => set((state) => ({
+        projects: state.projects.map((p) => p.id === id ? { ...p, ...data } : p)
+    })),
+    removeProject: (id) => set((state) => ({
+        projects: state.projects.filter((p) => p.id !== id)
+    })),
+    resetProjects: () => set({ projects: [] }),
+
     // Skills Form State
     skillsForm: {
         selectedSkills: [
@@ -308,6 +362,29 @@ export const useProfileStore = create<ProfileState>((set) => ({
             monthObtained: '',
             yearObtained: '',
             link: '',
+        }
+    }),
+
+    // Project Form State
+    projectForm: {
+        title: '',
+        description: '',
+        link: '',
+        skills: [],
+        tools: [],
+        image: undefined,
+    },
+    setProjectForm: (data) => set((state) => ({
+        projectForm: { ...state.projectForm, ...data }
+    })),
+    resetProjectForm: () => set({
+        projectForm: {
+            title: '',
+            description: '',
+            link: '',
+            skills: [],
+            tools: [],
+            image: undefined,
         }
     }),
 }))
