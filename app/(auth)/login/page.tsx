@@ -7,11 +7,13 @@ import { ChevronLeft, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
+import { Card } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useApi } from "@/hooks/use-api"
 import { useAuthStore } from "@/lib/store/auth-store"
-import { LoginResponse } from "@/types/auth"
+import { ApplicantLoginResponse, LoginResponse, User } from "@/types/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -29,9 +31,34 @@ type LoginFormValues = z.infer<typeof loginSchema>
  */
 export default function AuthPage() {
   const router = useRouter()
-  const { isSubmitting, setIsSubmitting, setTokens, setUser } = useAuthStore()
+  const { 
+    userRole, 
+    setUserRole, 
+    isSubmitting, 
+    setIsSubmitting, 
+    setTokens, 
+    setUser 
+  } = useAuthStore()
   const [loginError, setLoginError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+
+  const roles = [
+    {
+      id: "applicant",
+      title: "Talent / Freelancer",
+    },
+    {
+      id: "recruiter",
+      title: "Employer",
+    },
+  ]
+
+  // Ensure a role is selected, default to applicant if none
+  useEffect(() => {
+    if (!userRole) {
+      setUserRole("applicant")
+    }
+  }, [userRole, setUserRole])
 
   const {
     register,
@@ -50,31 +77,44 @@ export default function AuthPage() {
   const { post } = useApi()
 
   /**
-   * Handles the login form submission.
-   * Sends user credentials to the API, stores session tokens/profile on success,
-   * and redirects the user to the home page.
-   *
-   * @param data - The validated login form values (email, password, remember)
+   * Handles the login form submission for applicants.
+   * Sends credentials to the applicant-specific API endpoint.
    */
   const handleLoginSubmit = async (data: LoginFormValues) => {
     setIsSubmitting(true)
     setLoginError(null)
 
-    const response = await post("/auth/login", data)
+    const response = await post("/applicants/login", data)
 
     if (response.error) {
       console.error("Login failed:", response.error)
       setLoginError(response.error)
     } else {
-      const loginData = response.data as LoginResponse
+      const rawResponse = response.data
+      const loginData = (rawResponse?.data || rawResponse) as ApplicantLoginResponse
+      
+      const accessToken = loginData.access_token || loginData.tokens?.access_token
+      const refreshToken = loginData.refresh_token || loginData.tokens?.refresh_token
+      
+      if (!accessToken || !refreshToken) {
+        console.error("Login tokens missing. Raw response:", rawResponse)
+        setLoginError("Login failed: Invalid response from server")
+        setIsSubmitting(false)
+        return
+      }
 
-      // Store tokens and user data
-      setTokens(loginData.tokens.access_token, loginData.tokens.refresh_token)
-      setUser(loginData.data)
-
-      console.log("Login success:", loginData.message)
-
-      // Redirect to home/dashboard
+      // Store tokens and set role explicitly to applicant
+      setTokens(accessToken, refreshToken)
+      setUserRole("applicant")
+      
+      const userData: User = {
+        id: loginData.user_id || loginData.data?.user_id || loginData.data?.id || "",
+        full_name: loginData.full_name || loginData.data?.full_name || "Applicant",
+        email: data.email,
+        role: "applicant"
+      }
+      setUser(userData)
+      
       router.push("/dashboard")
     }
 
@@ -105,14 +145,17 @@ export default function AuthPage() {
 
       <div className="3xl:max-w-2xl w-full max-w-sm space-y-8 sm:max-w-md md:max-w-lg lg:max-w-xl">
         {/* Title & Subtext */}
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-gray-950 dark:text-white">
-            Sign In
-          </h1>
-          <p className="text-sm text-balance text-black dark:text-gray-400">
-            Fill your details to access your account
-          </p>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-gray-950 dark:text-white">
+              Sign In
+            </h1>
+            <p className="text-sm text-balance text-black dark:text-gray-400">
+              Fill your details to access your account as an applicant
+            </p>
+          </div>
         </div>
+
 
         {/* Sign In Form */}
         <form className="space-y-6" onSubmit={handleSubmit(handleLoginSubmit)}>

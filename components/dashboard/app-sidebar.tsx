@@ -85,9 +85,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar
-      className="border-none bg-[#3D424D] text-white dark:border-r dark:border-zinc-800 dark:bg-zinc-950"
+      className="border-none text-white dark:border-r dark:border-zinc-800 dark:bg-zinc-950"
+      style={{
+        "--sidebar": "#40444D",
+      } as React.CSSProperties}
       {...props}
     >
+
       <SidebarHeader className="flex h-20 items-center px-6 pt-6">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-white/10 text-white">
@@ -115,7 +119,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className={cn(
                     "h-11 px-4 transition-colors",
                     isActive
-                      ? "bg-white text-[#3D424D] hover:bg-white hover:text-[#3D424D]"
+                      ? "bg-white text-[#40444D] hover:bg-white hover:text-[#40444D]"
                       : "text-white/70 hover:bg-white/10 hover:text-white"
                   )}
                 >
@@ -123,7 +127,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <item.icon
                       className={cn(
                         "size-5",
-                        isActive ? "text-[#3D424D]" : "text-current"
+                        isActive ? "text-[#40444D]" : "text-current"
                       )}
                     />
                     <span className="font-medium">{item.title}</span>
@@ -134,6 +138,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           })}
         </SidebarMenu>
       </SidebarContent>
+
 
       <SidebarFooter className="p-3 pb-8">
         <SidebarMenu className="gap-2">

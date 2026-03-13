@@ -13,82 +13,123 @@ const api = axios.create({
  * - Handles 401 Unauthorized errors by attempting a silent token refresh.
  * - Prevents infinite loops by excluding auth endpoints from refresh logic.
  * - Cleans up session state on refresh failure.
- * 
+ *
  * @returns An object containing typed request methods (get, post, put, patch, delete).
  */
-export const useApi = () => {
-    const { accessToken, refreshToken, setTokens, clearTokens } = useAuthStore()
 
-    /**
-     * Request interceptor to attach the current access token to the Authorization header.
-     */
-    api.interceptors.request.use(
-        (config) => {
-            if (accessToken) {
-                config.headers.Authorization = `Bearer ${accessToken}`
-            }
-            return config
-        },
-        (error) => Promise.reject(error),
-    )
+// Request interceptor to attach the current access token
+api.interceptors.request.use(
+    (config) => {
+        const { accessToken } = useAuthStore.getState()
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`
+        }
+        return config
+    },
+    (error) => Promise.reject(error),
+)
 
-    /**
-     * Response interceptor to handle 401 errors and attempt token refresh.
-     */
-    api.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-            const originalRequest = error.config
+// Response interceptor to handle 401 errors and attempt token refresh
 
-            // Prevent infinite loops by identifying auth-related endpoints
-            const isAuthEndpoint = originalRequest.url?.includes('/auth/login') ||
-                originalRequest.url?.includes('/auth/refresh') ||
-                originalRequest.url?.includes('/auth/register')
+// Track ongoing refresh to prevent race conditions
+let isRefreshing = false
+let failedQueue: Array<{
+    resolve: (token: string) => void
+    reject: (error: unknown) => void
+}> = []
 
-            // Logic for handling 401 Unauthorized:
-            // 1. Response status must be 401.
-            // 2. We haven't already retried this specific request.
-            // 3. The failed request is NOT an authentication endpoint itself.
-            // 4. We have a refresh token available to attempt the recovery.
-            if (
-                error.response?.status === 401 &&
-                !originalRequest._retry &&
-                !isAuthEndpoint &&
-                refreshToken
-            ) {
-                originalRequest._retry = true
+const processQueue = (error: unknown, token: string | null = null) => {
+    failedQueue.forEach((prom) => {
+        if (error) {
+            prom.reject(error)
+        } else {
+            prom.resolve(token!)
+        }
+    })
+    failedQueue = []
+}
 
-                try {
-                    // Attempt to refresh token using a clean axios instance (not 'api')
-                    // to avoid recursive interceptor calls.
-                    const { data } = await axios.post('/api/auth/refresh', {
-                        refresh_token: refreshToken,
+api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config
+
+        // Identify auth-related endpoints to prevent refresh loops
+        const isAuthEndpoint = 
+            originalRequest.url?.includes('/applicants/login') ||
+            originalRequest.url?.includes('/applicants/register') ||
+            originalRequest.url?.includes('/applicants/refresh')
+
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry &&
+            !isAuthEndpoint
+        ) {
+            originalRequest._retry = true
+
+            // If a refresh is already in progress, queue this request
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({
+                        resolve: (token: string) => {
+                            originalRequest.headers.Authorization = `Bearer ${token}`
+                            resolve(api(originalRequest))
+                        },
+                        reject,
                     })
-
-                    const newAccessToken = data.access_token
-                    const newRefreshToken = data.refresh_token
-
-                    // Update stores with new credentials
-                    setTokens(newAccessToken, newRefreshToken)
-
-                    // Update the failed request header and retry it
-                    originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-                    return api(originalRequest)
-                } catch (refreshError) {
-                    // If the refresh attempt fails (e.g., refresh token expired),
-                    // clear all session data to force a re-login.
-                    clearTokens()
-                    return Promise.reject(refreshError)
-                }
+                })
             }
 
-            return Promise.reject(error)
-        },
-    )
+            isRefreshing = true
+
+            try {
+                const { refreshToken, setTokens } = useAuthStore.getState()
+
+                if (!refreshToken) {
+                    useAuthStore.getState().clearTokens()
+                    processQueue(error, null)
+                    return Promise.reject(error)
+                }
+
+                // Attempt refresh — tokens are still in cookies at this point
+                const response = await axios.post('/api/applicants/refresh', {
+                    refresh_token: refreshToken,
+                })
+
+                // Correctly unwrap from { data: { access_token, refresh_token } }
+                const responseData = response.data?.data || response.data
+                const newAccessToken = responseData?.access_token
+                const newRefreshToken = responseData?.refresh_token
+
+                if (!newAccessToken || !newRefreshToken) {
+                    throw new Error('Invalid refresh response structure')
+                }
+
+                // Only NOW update the tokens (after successful refresh)
+                setTokens(newAccessToken, newRefreshToken)
+                processQueue(null, newAccessToken)
+
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+                return api(originalRequest)
+            } catch (refreshError) {
+                // Refresh failed — NOW we clear tokens
+                useAuthStore.getState().clearTokens()
+                processQueue(refreshError, null)
+                return Promise.reject(refreshError)
+            } finally {
+                isRefreshing = false
+            }
+        }
+
+        return Promise.reject(error)
+    },
+)
+
+export const useApi = () => {
 
     /**
      * Helper function to execute API requests with consistent error handling.
-     * 
+     *
      * @param method - HTTP verb (GET, POST, etc.)
      * @param endpoint - The API path (relative to /api)
      * @param data - Optional request payload

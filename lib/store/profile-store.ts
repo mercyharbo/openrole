@@ -54,16 +54,18 @@ interface ProfileState {
 
     // Bio Form State
     bioForm: {
-        firstName: string
-        lastName: string
-        role: string
-        about: string
-        featuredSkills: string[]
-        nationality: string
-        phoneCountryCode: string
-        phoneNumber: string
-        linkedin: string
-        twitter: string
+        full_name: string
+        location: string
+        username: string
+        social_links: {
+            linkedin_url: string | null
+            github_url: string | null
+            x_url: string | null
+            instagram_url: string | null
+            reddit_url: string | null
+            website_url: string | null
+            portfolio_urls: string | null
+        }
     }
     setBioForm: (data: Partial<ProfileState['bioForm']>) => void
     resetBioForm: () => void
@@ -166,32 +168,36 @@ export const useProfileStore = create<ProfileState>((set) => ({
 
     // Bio Form State
     bioForm: {
-        firstName: '',
-        lastName: '',
-        role: '',
-        about: '',
-        featuredSkills: [],
-        nationality: '',
-        phoneCountryCode: '234',
-        phoneNumber: '',
-        linkedin: '',
-        twitter: '',
+        full_name: '',
+        location: '',
+        username: '',
+        social_links: {
+            linkedin_url: null,
+            github_url: null,
+            x_url: null,
+            instagram_url: null,
+            reddit_url: null,
+            website_url: null,
+            portfolio_urls: null,
+        },
     },
     setBioForm: (data) => set((state) => ({
         bioForm: { ...state.bioForm, ...data }
     })),
     resetBioForm: () => set({
         bioForm: {
-            firstName: '',
-            lastName: '',
-            role: '',
-            about: '',
-            featuredSkills: [],
-            nationality: '',
-            phoneCountryCode: '234',
-            phoneNumber: '',
-            linkedin: '',
-            twitter: '',
+            full_name: '',
+            location: '',
+            username: '',
+            social_links: {
+                linkedin_url: null,
+                github_url: null,
+                x_url: null,
+                instagram_url: null,
+                reddit_url: null,
+                website_url: null,
+                portfolio_urls: null,
+            },
         }
     }),
 

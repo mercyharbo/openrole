@@ -21,7 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useRecruiterDashboard, useRecruiterProfile } from "@/hooks/use-queries"
+import { useApplicantProfile } from "@/hooks/use-queries"
+
+import { useAuthStore } from "@/lib/store/auth-store"
+import { useMemo } from "react"
 import {
   Briefcase,
   Calendar,
@@ -56,39 +59,27 @@ const chartConfig = {
  * Displays key metrics and pending applications.
  */
 export default function OverviewPage() {
-  const { dashboardData } = useRecruiterDashboard()
-  const { recruiterProfile } = useRecruiterProfile()
-
-  console.log("Recruiter Dashboard Data:", dashboardData)
-  console.log("Recruiter Profile:", recruiterProfile)
-
-  const formatValue = (val: number | undefined) => {
-    if (val === undefined || val === 0) return "0"
-    if (val >= 1000) {
-      return (val / 1000).toFixed(1) + "k"
-    }
-    return val.toString().padStart(2, "0")
-  }
+  const { applicant: profile, isLoading } = useApplicantProfile()
 
   const liveMetrics = [
     {
-      title: "Total Jobs",
-      value: formatValue(dashboardData?.active_jobs),
+      title: "Applications",
+      value: "00",
       icon: Briefcase,
     },
     {
-      title: "Open Jobs",
-      value: formatValue(dashboardData?.pending),
+      title: "Active Roles",
+      value: "00",
       icon: Inbox,
     },
     {
-      title: "Total Applicants",
-      value: formatValue(dashboardData?.total_applications),
+      title: "Interviews",
+      value: "00",
       icon: Users,
     },
     {
-      title: "Total Shortlisted",
-      value: formatValue(dashboardData?.shortlisted),
+      title: "Saved Jobs",
+      value: "00",
       icon: UserPlus,
     },
   ]
@@ -116,111 +107,44 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      {/* Insight Section */}
+      {/* Main Content Area */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Application Insight Card */}
-        <Card className="lg:col-span-2">
-          <CardHeader className="flex items-center justify-between pb-8">
-            <CardTitle className="text-lg">Application Insight</CardTitle>
-            <CardAction className="flex items-center gap-3">
-              <Select defaultValue="7d">
-                <SelectTrigger
-                  size="default"
-                  className="h-9 min-w-[130px] gap-2 border-gray-200 dark:border-zinc-800 dark:bg-zinc-950"
-                >
-                  <Calendar size={16} />
-                  <SelectValue placeholder="Select period" />
-                </SelectTrigger>
-                <SelectContent align="end">
-                  <SelectItem value="7d">Last 7 days</SelectItem>
-                  <SelectItem value="30d">Last 30 days</SelectItem>
-                  <SelectItem value="90d">Last 90 days</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-9 border-gray-200 text-gray-400 dark:border-zinc-800 dark:text-gray-500"
-              >
-                <MoreHorizontal size={20} />
-              </Button>
-            </CardAction>
+        <Card className="lg:col-span-2 min-h-[400px]">
+          <CardHeader>
+            <CardTitle className="text-lg">Recent Applications</CardTitle>
           </CardHeader>
-          <CardContent className="pt-0">
-            <div className="flex flex-col gap-6">
-              {/* Chart Implementation using Shadcn/Recharts */}
-              <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                <BarChart
-                  data={chartData}
-                  margin={{ top: 0, right: 10, left: -20, bottom: 10 }}
-                  barSize={16}
-                >
-                  <CartesianGrid
-                    vertical={false}
-                    stroke="var(--gray-50)"
-                    strokeDasharray="0"
-                  />
-                  <XAxis
-                    dataKey="day"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#9CA3AF", fontSize: 13 }}
-                    dy={16}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#9CA3AF", fontSize: 13 }}
-                    ticks={[0, 100, 200, 300, 400]}
-                    domain={[0, 400]}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                  />
-                  <Bar
-                    dataKey="value"
-                    fill="var(--color-value)"
-                    radius={[10, 10, 10, 10]}
-                    background={{ fill: "#F9FAFB", radius: 10 }}
-                  />
-                </BarChart>
-              </ChartContainer>
-
-              {/* Chart Date Range Footer */}
-              <div className="flex items-center gap-4 py-2">
-                <div className="h-px flex-1 bg-gray-100 dark:bg-zinc-800" />
-                <span className="shrink-0 text-xs text-gray-400 dark:text-gray-500">
-                  Feb 26 - Mar 4
-                </span>
-                <div className="h-px flex-1 bg-gray-100 dark:bg-zinc-800" />
-              </div>
+          <CardContent className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-gray-50 text-gray-400 dark:bg-zinc-900">
+              <Briefcase size={32} />
             </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">No applications yet</h3>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Start exploring jobs to see your application history here.</p>
+            <Button className="mt-8 gap-2">Explore Jobs</Button>
           </CardContent>
         </Card>
 
-        {/* Empty Placeholder Card */}
-        <Card className="h-full min-h-[400px] lg:col-span-1" />
+        {/* Profile Completion or Suggested Jobs */}
+        <Card className="h-full min-h-[400px] lg:col-span-1">
+          <CardHeader>
+            <CardTitle className="text-lg">Profile Status</CardTitle>
+          </CardHeader>
+          <CardContent>
+             <div className="space-y-6">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Completion</span>
+                    <span className="font-medium">35%</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-zinc-800">
+                    <div className="h-full w-[35%] rounded-full bg-primary" />
+                  </div>
+                </div>
+                <p className="text-sm text-gray-500">Complete your profile to increase your chances of getting hired by 5x.</p>
+                <Button variant="outline" className="w-full">Edit Profile</Button>
+             </div>
+          </CardContent>
+        </Card>
       </div>
-
-      {/* New Job Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-normal">New Job</CardTitle>
-        </CardHeader>
-        <CardContent className="pb-8">
-          <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-gray-200 py-12 dark:border-zinc-800">
-            <p className="text-gray-500 dark:text-gray-400">Create a new job</p>
-            <Button
-              variant="outline"
-              className="gap-2 px-6 py-5 dark:border-zinc-800"
-            >
-              <Plus size={16} />
-              Create job
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </main>
   )
 }

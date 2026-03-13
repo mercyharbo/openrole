@@ -37,17 +37,24 @@ api.interceptors.response.use(
                 }
 
                 // Call the refresh endpoint
-                const response = await axios.post('/api/auth/refresh', {
+                const response = await axios.post('/api/applicants/refresh', {
                     refresh_token: refreshToken,
                 })
 
-                const { access_token, refresh_token } = response.data
+                // Correctly unwrap from { data: { access_token, refresh_token } }
+                const responseData = response.data?.data || response.data
+                const newAccessToken = responseData?.access_token
+                const newRefreshToken = responseData?.refresh_token
+
+                if (!newAccessToken || !newRefreshToken) {
+                    throw new Error('Invalid refresh response structure')
+                }
 
                 // Update the store and cookies
-                setTokens(access_token, refresh_token)
+                setTokens(newAccessToken, newRefreshToken)
 
                 // Retry the original request with the new token
-                originalRequest.headers.Authorization = `Bearer ${access_token}`
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
                 return api(originalRequest)
             } catch (refreshError) {
                 // If refresh also fails, clear credentials and logout
