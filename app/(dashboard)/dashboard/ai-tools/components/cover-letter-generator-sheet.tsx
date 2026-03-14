@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import { Loader2, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -9,6 +11,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
+import { useApi } from "@/hooks/use-api"
+import { toast } from "react-toastify"
 
 interface CoverLetterGeneratorSheetProps {
   isOpen: boolean
@@ -23,6 +27,52 @@ export function CoverLetterGeneratorSheet({
   isOpen,
   onOpenChange,
 }: CoverLetterGeneratorSheetProps) {
+  const [jobDescription, setJobDescription] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [generatedContent, setGeneratedContent] = useState("")
+  const [isCopied, setIsCopied] = useState(false)
+  const [apiError, setApiError] = useState<string | null>(null)
+
+  const { post } = useApi()
+
+  const handleGenerate = async () => {
+    if (!jobDescription.trim()) {
+      toast.error("Please provide a job description")
+      return
+    }
+
+    setIsLoading(true)
+    setApiError(null)
+    try {
+      const { data, error } = await post("applicants/generate/cover-letter", {
+        job_description: jobDescription,
+      })
+
+      if (error) {
+        throw new Error(error)
+      }
+
+      // Unwrap envelope if it exists
+      const content = data.data?.content || data.content
+      setGeneratedContent(content)
+      toast.success("Cover letter generated successfully!")
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Error generating cover letter. Please try again."
+      console.error(error)
+      setApiError(message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleCopy = () => {
+    if (!generatedContent) return
+    navigator.clipboard.writeText(generatedContent)
+    setIsCopied(true)
+    toast.success("Copied to clipboard!")
+    setTimeout(() => setIsCopied(false), 2000)
+  }
+
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="scrollbar-hide overflow-y-auto sm:max-w-md">
@@ -40,13 +90,32 @@ export function CoverLetterGeneratorSheet({
                 Job Description
               </label>
               <Textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
                 placeholder="Paste the job description here..."
                 className="min-h-[160px] resize-none border-gray-200 bg-white focus:ring-primary/20 dark:border-zinc-800 dark:bg-zinc-950"
               />
             </div>
 
-            <Button className="h-11 w-full text-white">
-              Generate cover letter
+            {apiError && (
+              <div className="rounded-lg bg-red-50 p-3 text-xs font-medium text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                {apiError}
+              </div>
+            )}
+
+            <Button
+              className="h-11 w-full text-white"
+              onClick={handleGenerate}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                "Generate cover letter"
+              )}
             </Button>
           </div>
 
@@ -59,15 +128,28 @@ export function CoverLetterGeneratorSheet({
             </h3>
             <div className="rounded-xl border border-gray-100 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
               <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-600 dark:text-gray-400">
-                {`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature.\n\nThe standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.`}
+                {generatedContent || "Your response will appear here..."}
               </p>
             </div>
-            <Button
-              variant="outline"
-              className="h-11 w-full border-gray-200 font-semibold text-gray-600 dark:border-zinc-800 dark:text-gray-400"
-            >
-              Copy response
-            </Button>
+            {generatedContent && (
+              <Button
+                variant="outline"
+                className="h-11 w-full border-gray-200 font-semibold text-gray-600 dark:border-zinc-800 dark:text-gray-400"
+                onClick={handleCopy}
+              >
+                {isCopied ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy response
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         </div>
       </SheetContent>

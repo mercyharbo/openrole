@@ -10,6 +10,8 @@ interface ResumeCardProps {
     date: string
     time: string
     preview?: string
+    file_url?: string
+    format?: string
   }
 }
 
@@ -25,8 +27,8 @@ export function ResumeCard({ resume }: ResumeCardProps) {
         <div className="flex items-center gap-3">
           <div className="relative flex size-10 items-center justify-center rounded-lg border border-gray-100 bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900">
             <FileText className="size-5 text-gray-400 dark:text-gray-500" />
-            <div className="absolute -right-1 -bottom-1 flex h-3.5 w-5 items-center justify-center rounded-sm bg-gray-200 text-[7px] font-bold text-gray-600 dark:bg-zinc-800 dark:text-gray-400">
-              PDF
+            <div className="absolute -right-1 -bottom-1 flex h-3.5 px-1.5 items-center justify-center rounded-sm bg-gray-200 text-[7px] font-bold text-gray-600 dark:bg-zinc-800 dark:text-gray-400">
+              {resume.format?.toUpperCase() || "PDF"}
             </div>
           </div>
           <span className="text-[15px] font-medium text-gray-900 dark:text-gray-100">
@@ -39,12 +41,19 @@ export function ResumeCard({ resume }: ResumeCardProps) {
       </div>
 
       {/* Resume Preview Placeholder */}
-      <div className="h-[200px] w-full bg-gray-100/60 dark:bg-zinc-800/60">
-        {/* Actual image would go here:
-        {resume.preview && (
-          <NextImage src={resume.preview} alt={resume.name} fill className="object-cover" />
+      <div className="group/preview relative h-[200px] w-full bg-gray-100/60 dark:bg-zinc-800/60">
+        {resume.file_url && (
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover/preview:opacity-100">
+            <a
+              href={resume.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg bg-white/90 px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm backdrop-blur-sm hover:bg-white dark:bg-zinc-800/90 dark:text-white dark:hover:bg-zinc-800"
+            >
+              View Document
+            </a>
+          </div>
         )}
-        */}
       </div>
 
       {/* Resume Footer */}

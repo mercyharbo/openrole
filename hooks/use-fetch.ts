@@ -1,5 +1,5 @@
 import api from '@/lib/api'
-import axios from 'axios'
+import { extractErrorMessage } from '@/lib/utils'
 import useSWR, { SWRConfiguration } from 'swr'
 
 export const useFetch = <T = unknown>(
@@ -12,12 +12,8 @@ export const useFetch = <T = unknown>(
             const response = await api.get(url)
             return response.data
         } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                // Axios errors have a response object with potential data
-                const message = err.response?.data?.error || err.message || 'Fetch failed'
-                throw message
-            }
-            throw err instanceof Error ? err.message : 'Fetch failed'
+            const message = extractErrorMessage(err)
+            throw message
         }
     }
 
@@ -37,5 +33,6 @@ export const useFetch = <T = unknown>(
         isLoading: !error && !data,
         isValidating,
         mutate,
+        refresh: mutate,
     }
 }

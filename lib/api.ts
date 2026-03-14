@@ -1,5 +1,8 @@
 import { useAuthStore } from '@/lib/store/auth-store'
 import axios from 'axios'
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies()
 
 const api = axios.create({
     baseURL: '/api',
@@ -10,8 +13,10 @@ api.interceptors.request.use(
     (config) => {
         // We get the token directly from the store's current state since this is outside a hook
         const { accessToken } = useAuthStore.getState()
-        if (accessToken) {
-            config.headers.Authorization = `Bearer ${accessToken}`
+        // Fallback to cookie if Zustand state is stale (e.g. after hydration mismatch)
+        const token = accessToken || cookies.get('access_token')
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
         }
         return config
     },
@@ -51,8 +56,9 @@ api.interceptors.response.use(
             originalRequest.url?.includes('/applicants/register') ||
             originalRequest.url?.includes('/applicants/refresh')
 
-        // If we get a 401 and haven't tried refreshing yet
-        if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
+        // If we get a 401 or 403 and haven't tried refreshing yet
+        const status = error.response?.status
+        if ((status === 401 || status === 403) && !originalRequest._retry && !isAuthEndpoint) {
             originalRequest._retry = true
 
             // If a refresh is already in progress, queue this request
@@ -71,41 +77,51 @@ api.interceptors.response.use(
             isRefreshing = true
 
             try {
-                const { refreshToken, setTokens } = useAuthStore.getState()
+                // Read refresh token from both Zustand state AND cookies as fallback
+                const { refreshToken: storeRefreshToken, clearTokens, setTokens } = useAuthStore.getState()
+                const cookieRefreshToken = cookies.get('refresh_token')
+                const refreshToken = storeRefreshToken || cookieRefreshToken
 
                 if (!refreshToken) {
-                    // No refresh token available — clear everything and reject
-                    useAuthStore.getState().clearTokens()
+                    // No refresh token anywhere — clear everything and reject
+                    clearTokens()
                     processQueue(error, null)
                     return Promise.reject(error)
                 }
 
-                // Attempt to refresh — tokens are still in cookies at this point
-                const response = await axios.post('/api/applicants/refresh', {
-                    refresh_token: refreshToken,
-                })
+                // Attempt to refresh — use raw axios, not the `api` instance, to avoid interceptor loops
+                // Passing refresh_token as a query parameter as specified by backend error (loc: ["query", "refresh_token"])
+                const response = await axios.post(`/api/applicants/refresh?refresh_token=${refreshToken}`)
 
-                // Correctly unwrap from { data: { access_token, refresh_token } }
+                // Support both { data: { access_token... } } and { access_token... }
                 const responseData = response.data?.data || response.data
-                const newAccessToken = responseData?.access_token
-                const newRefreshToken = responseData?.refresh_token
+                const newAccessToken = responseData?.access_token || responseData?.data?.access_token
+                const newRefreshToken = responseData?.refresh_token || responseData?.data?.refresh_token
 
                 if (!newAccessToken || !newRefreshToken) {
                     throw new Error('Invalid refresh response structure')
                 }
 
-                // Only NOW update the tokens (after successful refresh)
+                // Update tokens in store and cookies
                 setTokens(newAccessToken, newRefreshToken)
                 processQueue(null, newAccessToken)
 
                 // Retry the original request with the new token
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
                 return api(originalRequest)
-            } catch (refreshError: any) {
-                // Refresh failed — NOW we clear tokens
-                console.error('Token refresh failed:', refreshError.response?.data || refreshError.message)
-                useAuthStore.getState().clearTokens()
-                processQueue(refreshError, null)
+            } catch (refreshError: unknown) {
+                const refreshStatus = (refreshError as { response?: { status: number } })?.response?.status
+                
+                // Only clear tokens if the refresh itself failed with 401/403 (invalid refresh token)
+                // If it's a 500 or network error, we just fail the request but keep the user logged in
+                if (refreshStatus === 401 || refreshStatus === 403) {
+                    console.error('Token refresh failed (Unauthorized):', (refreshError as { response?: { data: unknown } }).response?.data || (refreshError as Error).message)
+                    useAuthStore.getState().clearTokens()
+                } else {
+                    console.error('Token refresh failed (Server Error):', (refreshError as Error).message)
+                }
+                
+                processQueue(refreshError)
                 return Promise.reject(refreshError)
             } finally {
                 isRefreshing = false

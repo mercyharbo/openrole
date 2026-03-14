@@ -108,7 +108,7 @@ export function ExperienceTab() {
 
   if (activeExperiences.length === 0) {
     return (
-      <Card className="gap-0 py-0">
+      <Card className="gap-0 py-0 bg-muted/50">
         <CardHeader className="flex items-center justify-between py-3">
           <CardTitle className="text-lg">Work Experience</CardTitle>
           <CardAction>
@@ -136,7 +136,7 @@ export function ExperienceTab() {
 
   return (
     <>
-      <Card className="py-5">
+      <Card className="py-5 bg-muted/50">
         <CardHeader className="flex items-center justify-between">
           <CardTitle className="text-xl font-semibold">
             Work Experience
@@ -173,7 +173,7 @@ function ExperienceCard({ experience }: { experience: Experience }) {
   const tags = [...(experience.skills || []), ...(experience.tools || [])]
 
   return (
-    <Card>
+    <Card className="bg-muted/50">
       <CardHeader>
         <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
           {experience.company || "Focus Peer"}

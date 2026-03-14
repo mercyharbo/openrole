@@ -23,7 +23,7 @@ export function ProjectsTab() {
   const isEmpty = projects.length === 0
 
   return (
-    <Card className="py-5">
+    <Card className="py-5 bg-muted/50">
       <CardHeader className="flex items-center justify-between">
         <CardTitle className="text-xl font-semibold">Projects</CardTitle>
         <CardAction>
@@ -58,7 +58,7 @@ export function ProjectsTab() {
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="group flex flex-col gap-5 rounded-2xl border border-gray-100 bg-white p-4 transition-all hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900/40"
+                className="group flex flex-col gap-5 rounded-2xl border border-gray-100 bg-muted/50 p-4 transition-all hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900/40"
               >
                 <div className="relative aspect-[1.6/1] w-full overflow-hidden rounded-xl bg-gray-100 dark:bg-zinc-800">
                   {project.image ? (

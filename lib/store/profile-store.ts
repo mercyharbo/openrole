@@ -28,14 +28,23 @@ export interface Project {
 
 interface ProfileState {
     // Dialog States
-    isBioDialogOpen: boolean
-    setBioDialogOpen: (isOpen: boolean) => void
+    isSocialLinksDialogOpen: boolean
+    setSocialLinksDialogOpen: (isOpen: boolean) => void
 
     isExperienceDialogOpen: boolean
     setExperienceDialogOpen: (isOpen: boolean) => void
 
     isEducationDialogOpen: boolean
     setEducationDialogOpen: (isOpen: boolean) => void
+
+    isPersonalInfoDialogOpen: boolean
+    setPersonalInfoDialogOpen: (isOpen: boolean) => void
+
+    isJobPreferencesDialogOpen: boolean
+    setJobPreferencesDialogOpen: (isOpen: boolean) => void
+
+    isComplianceDialogOpen: boolean
+    setComplianceDialogOpen: (isOpen: boolean) => void
 
     isSkillsDialogOpen: boolean
     setSkillsDialogOpen: (isOpen: boolean) => void
@@ -52,23 +61,18 @@ interface ProfileState {
     isViewApplicationDialogOpen: boolean
     setViewApplicationDialogOpen: (isOpen: boolean) => void
 
-    // Bio Form State
-    bioForm: {
-        full_name: string
-        location: string
-        username: string
-        social_links: {
-            linkedin_url: string | null
-            github_url: string | null
-            x_url: string | null
-            instagram_url: string | null
-            reddit_url: string | null
-            website_url: string | null
-            portfolio_urls: string | null
-        }
+    // Social Links Form State
+    socialLinksForm: {
+        linkedin_url: string | null
+        github_url: string | null
+        x_url: string | null
+        instagram_url: string | null
+        reddit_url: string | null
+        website_url: string | null
+        portfolio_urls: string | null
     }
-    setBioForm: (data: Partial<ProfileState['bioForm']>) => void
-    resetBioForm: () => void
+    setSocialLinksForm: (data: Partial<ProfileState['socialLinksForm']>) => void
+    resetSocialLinksForm: () => void
 
     // Experience Form State
     experiences: Experience[]
@@ -138,18 +142,47 @@ interface ProfileState {
     }
     setProjectForm: (data: Partial<ProfileState['projectForm']>) => void
     resetProjectForm: () => void
+
+    // Resume & Docs State
+    resumeMode: 'upload' | 'paste'
+    setResumeMode: (mode: 'upload' | 'paste') => void
+    isUploadingResume: boolean
+    setIsUploadingResume: (isUploading: boolean) => void
+    pasteText: string
+    setPasteText: (text: string) => void
+    docName: string
+    setDocName: (name: string) => void
+    docType: string
+    setDocType: (type: string) => void
+    isUploadingDoc: boolean
+    setIsUploadingDoc: (isUploading: boolean) => void
+    docToDelete: string | null
+    setDocToDelete: (id: string | null) => void
+    isDeletingDoc: boolean
+    setIsDeletingDoc: (isDeleting: boolean) => void
+    selectedDocFile: File | null
+    setSelectedDocFile: (file: File | null) => void
 }
 
 export const useProfileStore = create<ProfileState>((set) => ({
     // Dialog States
-    isBioDialogOpen: false,
-    setBioDialogOpen: (isOpen) => set({ isBioDialogOpen: isOpen }),
+    isSocialLinksDialogOpen: false,
+    setSocialLinksDialogOpen: (isOpen) => set({ isSocialLinksDialogOpen: isOpen }),
 
     isExperienceDialogOpen: false,
     setExperienceDialogOpen: (isOpen) => set({ isExperienceDialogOpen: isOpen }),
 
     isEducationDialogOpen: false,
     setEducationDialogOpen: (isOpen) => set({ isEducationDialogOpen: isOpen }),
+
+    isPersonalInfoDialogOpen: false,
+    setPersonalInfoDialogOpen: (isOpen) => set({ isPersonalInfoDialogOpen: isOpen }),
+
+    isJobPreferencesDialogOpen: false,
+    setJobPreferencesDialogOpen: (isOpen) => set({ isJobPreferencesDialogOpen: isOpen }),
+
+    isComplianceDialogOpen: false,
+    setComplianceDialogOpen: (isOpen) => set({ isComplianceDialogOpen: isOpen }),
 
     isSkillsDialogOpen: false,
     setSkillsDialogOpen: (isOpen) => set({ isSkillsDialogOpen: isOpen }),
@@ -166,12 +199,21 @@ export const useProfileStore = create<ProfileState>((set) => ({
     isViewApplicationDialogOpen: false,
     setViewApplicationDialogOpen: (isOpen) => set({ isViewApplicationDialogOpen: isOpen }),
 
-    // Bio Form State
-    bioForm: {
-        full_name: '',
-        location: '',
-        username: '',
-        social_links: {
+    // Social Links Form State
+    socialLinksForm: {
+        linkedin_url: null,
+        github_url: null,
+        x_url: null,
+        instagram_url: null,
+        reddit_url: null,
+        website_url: null,
+        portfolio_urls: null,
+    },
+    setSocialLinksForm: (data) => set((state) => ({
+        socialLinksForm: { ...state.socialLinksForm, ...data }
+    })),
+    resetSocialLinksForm: () => set({
+        socialLinksForm: {
             linkedin_url: null,
             github_url: null,
             x_url: null,
@@ -179,25 +221,6 @@ export const useProfileStore = create<ProfileState>((set) => ({
             reddit_url: null,
             website_url: null,
             portfolio_urls: null,
-        },
-    },
-    setBioForm: (data) => set((state) => ({
-        bioForm: { ...state.bioForm, ...data }
-    })),
-    resetBioForm: () => set({
-        bioForm: {
-            full_name: '',
-            location: '',
-            username: '',
-            social_links: {
-                linkedin_url: null,
-                github_url: null,
-                x_url: null,
-                instagram_url: null,
-                reddit_url: null,
-                website_url: null,
-                portfolio_urls: null,
-            },
         }
     }),
 
@@ -393,4 +416,24 @@ export const useProfileStore = create<ProfileState>((set) => ({
             image: undefined,
         }
     }),
+
+    // Resume & Docs State
+    resumeMode: 'upload',
+    setResumeMode: (mode) => set({ resumeMode: mode }),
+    isUploadingResume: false,
+    setIsUploadingResume: (isUploading) => set({ isUploadingResume: isUploading }),
+    pasteText: '',
+    setPasteText: (text) => set({ pasteText: text }),
+    docName: '',
+    setDocName: (name) => set({ docName: name }),
+    docType: 'Recommendation Letter',
+    setDocType: (type) => set({ docType: type }),
+    isUploadingDoc: false,
+    setIsUploadingDoc: (isUploading) => set({ isUploadingDoc: isUploading }),
+    docToDelete: null,
+    setDocToDelete: (id) => set({ docToDelete: id }),
+    isDeletingDoc: false,
+    setIsDeletingDoc: (isDeleting) => set({ isDeletingDoc: isDeleting }),
+    selectedDocFile: null,
+    setSelectedDocFile: (file) => set({ selectedDocFile: file }),
 }))

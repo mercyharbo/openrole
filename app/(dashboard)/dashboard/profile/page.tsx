@@ -9,13 +9,15 @@ import { useApplicantProfile } from "@/hooks/use-queries"
 import { cn } from "@/lib/utils"
 import { Linkedin, MoreHorizontal, Share2, Twitter } from "lucide-react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { AboutTab } from "./component/about-tab"
+import { ResumeDocsTab } from "./component/resume-docs-tab"
 
 const tabs = [
   { label: "About", id: "about" },
   { label: "Experience", id: "experience" },
   { label: "Projects", id: "projects" },
+  { label: "Resume & Docs", id: "resume" },
 ]
 
 export default function ProfilePage() {
@@ -73,7 +75,7 @@ export default function ProfilePage() {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-5">
+                <div className="flex items-center gap-2">
                   {applicant?.skills && applicant.skills.length > 0 ? (
                     applicant.skills.slice(0, 3).map((skill) => (
                       <Badge
@@ -169,9 +171,10 @@ export default function ProfilePage() {
         </div>
       </Card>
 
-      {/* tabs here */}
-      <div className="flex-1 overflow-y-auto">
+      {/* tabs content area */}
+      <div className="min-h-screen flex-1 overflow-y-auto pb-10">
         {activeTab === "about" && <AboutTab />}
+        {activeTab === "resume" && <ResumeDocsTab />}
         {/* {activeTab === "experience" && <ExperienceTab applicant={applicant} />}
         {activeTab === "projects" && <ProjectsTab applicant={applicant} />} */}
       </div>

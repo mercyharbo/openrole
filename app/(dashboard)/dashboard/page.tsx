@@ -8,58 +8,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { useApplicantProfile } from "@/hooks/use-queries"
 
-import { useAuthStore } from "@/lib/store/auth-store"
-import { useMemo } from "react"
 import {
   Briefcase,
-  Calendar,
   Inbox,
-  MoreHorizontal,
-  Plus,
   UserPlus,
   Users,
 } from "lucide-react"
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
-const chartData = [
-  { day: "Sun", value: 180 },
-  { day: "Mon", value: 60 },
-  { day: "Tue", value: 230 },
-  { day: "Wed", value: 100 },
-  { day: "Thu", value: 190 },
-  { day: "Fri", value: 270 },
-  { day: "Sat", value: 220 },
-]
-
-const chartConfig = {
-  value: {
-    label: "Applications",
-    color: "#0097FB",
-  },
-} satisfies ChartConfig
 
 /**
  * Dashboard Overview page.
  * Displays key metrics and pending applications.
  */
 export default function OverviewPage() {
-  const { applicant: profile, isLoading } = useApplicantProfile()
+  useApplicantProfile()
 
   const liveMetrics = [
     {

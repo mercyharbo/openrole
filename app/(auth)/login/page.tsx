@@ -7,11 +7,9 @@ import { ChevronLeft, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
-import { Card } from "@/components/ui/card"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useApi } from "@/hooks/use-api"
 import { useAuthStore } from "@/lib/store/auth-store"
-import { ApplicantLoginResponse, LoginResponse, User } from "@/types/auth"
+import { ApplicantLoginResponse, User } from "@/types/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -42,16 +40,6 @@ export default function AuthPage() {
   const [loginError, setLoginError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
 
-  const roles = [
-    {
-      id: "applicant",
-      title: "Talent / Freelancer",
-    },
-    {
-      id: "recruiter",
-      title: "Employer",
-    },
-  ]
 
   // Ensure a role is selected, default to applicant if none
   useEffect(() => {
