@@ -11,11 +11,13 @@ import { Linkedin, MoreHorizontal, Share2, Twitter } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { AboutTab } from "./component/about-tab"
+import { PreferencesTab } from "./component/preferences-tab"
+import { ProjectsTab } from "./component/projects-tab"
 import { ResumeDocsTab } from "./component/resume-docs-tab"
 
 const tabs = [
   { label: "About", id: "about" },
-  { label: "Experience", id: "experience" },
+  { label: "Preferences", id: "preferences" },
   { label: "Projects", id: "projects" },
   { label: "Resume & Docs", id: "resume" },
 ]
@@ -175,8 +177,8 @@ export default function ProfilePage() {
       <div className="min-h-screen flex-1 overflow-y-auto pb-10">
         {activeTab === "about" && <AboutTab />}
         {activeTab === "resume" && <ResumeDocsTab />}
-        {/* {activeTab === "experience" && <ExperienceTab applicant={applicant} />}
-        {activeTab === "projects" && <ProjectsTab applicant={applicant} />} */}
+        {activeTab === "preferences" && <PreferencesTab />}
+        {activeTab === "projects" && <ProjectsTab />}
       </div>
     </main>
   )

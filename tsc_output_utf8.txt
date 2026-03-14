@@ -1,0 +1,9 @@
+﻿app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(3,24): error TS2307: Cannot find module '@/components/ui/button' or its corresponding type declarations.
+app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(9,8): error TS2307: Cannot find module '@/components/ui/dialog' or its corresponding type declarations.
+app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(17,8): error TS2307: Cannot find module '@/components/ui/form' or its corresponding type declarations.
+app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(18,23): error TS2307: Cannot find module '@/components/ui/input' or its corresponding type declarations.
+app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(19,24): error TS2307: Cannot find module '@/components/ui/switch' or its corresponding type declarations.
+app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(20,24): error TS2307: Cannot find module '@/hooks/use-api' or its corresponding type declarations.
+app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(21,41): error TS2307: Cannot find module '@/hooks/use-queries' or its corresponding type declarations.
+app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(22,33): error TS2307: Cannot find module '@/lib/store/profile-store' or its corresponding type declarations.
+app/(dashboard)/dashboard/profile/component/edit-auto-apply-preferences-dialog.tsx(29,23): error TS2307: Cannot find module '@/components/ui/badge' or its corresponding type declarations.

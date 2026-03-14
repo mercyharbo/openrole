@@ -34,7 +34,6 @@ export function AboutTab() {
     setJobPreferencesDialogOpen,
     setComplianceDialogOpen,
     setEducationDialogOpen,
-    setAwardDialogOpen,
   } = useProfileStore()
   const { applicant, isLoading } = useApplicantProfile()
 
@@ -42,39 +41,6 @@ export function AboutTab() {
     return <ProfileSkeleton />
   }
 
-  // Check if there's any data
-  // const hasData =
-  //   applicant &&
-  //   ((applicant.extracted_profile as any)?.bio ||
-  //     (applicant.skills && applicant.skills.length > 0) ||
-  //     (applicant.personal_info as any)?.education)
-
-  // if (!hasData) {
-  //   return (
-  //     <Card className="border py-3">
-  //       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-  //         <CardTitle className="text-base font-medium text-gray-900 dark:text-white">
-  //           About
-  //         </CardTitle>
-  //         <Button variant="outline" onClick={() => setBioDialogOpen(true)}>
-  //           <Plus className="size-4" />
-  //           Add
-  //         </Button>
-  //       </CardHeader>
-  //       <CardContent className="flex min-h-[400px] flex-col items-center justify-center text-center">
-  //         <div className="space-y-2">
-  //           <h3 className="text-base font-medium text-gray-900 dark:text-white">
-  //             Oops!!!
-  //           </h3>
-  //           <p className="text-sm text-gray-400 dark:text-gray-500">
-  //             You haven't added any info about you.
-  //           </p>
-  //         </div>
-  //       </CardContent>
-  //       <AddBioDialog />
-  //     </Card>
-  //   )
-  // }
 
   if (!applicant) return null
 

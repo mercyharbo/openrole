@@ -8,16 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useApplicantProfile } from "@/hooks/use-queries"
+import { useApplicantProfile, useAutoApplyStats } from "@/hooks/use-queries"
 
 import {
   Briefcase,
-  Inbox,
-  UserPlus,
-  Users,
+  CheckCircle2,
+  XCircle,
+  Zap,
 } from "lucide-react"
-
-
 
 /**
  * Dashboard Overview page.
@@ -25,27 +23,28 @@ import {
  */
 export default function OverviewPage() {
   useApplicantProfile()
+  const { stats } = useAutoApplyStats()
 
   const liveMetrics = [
     {
-      title: "Applications",
-      value: "00",
+      title: "Total Application",
+      value: stats?.total_applications?.toString().padStart(2, '0') ?? "00",
       icon: Briefcase,
     },
     {
-      title: "Active Roles",
-      value: "00",
-      icon: Inbox,
+      title: "Successful",
+      value: stats?.successful?.toString().padStart(2, '0') ?? "00",
+      icon: CheckCircle2,
     },
     {
-      title: "Interviews",
-      value: "00",
-      icon: Users,
+      title: "Failed",
+      value: stats?.failed?.toString().padStart(2, '0') ?? "00",
+      icon: XCircle,
     },
     {
-      title: "Saved Jobs",
-      value: "00",
-      icon: UserPlus,
+      title: "Daily Limit",
+      value: stats?.daily_limit?.toString().padStart(2, '0') ?? "00",
+      icon: Zap,
     },
   ]
 

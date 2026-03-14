@@ -61,6 +61,12 @@ interface ProfileState {
     isViewApplicationDialogOpen: boolean
     setViewApplicationDialogOpen: (isOpen: boolean) => void
 
+    isAutoApplyPreferencesDialogOpen: boolean
+    setAutoApplyPreferencesDialogOpen: (isOpen: boolean) => void
+
+    isCreateAutoApplyPreferencesDialogOpen: boolean
+    setCreateAutoApplyPreferencesDialogOpen: (isOpen: boolean) => void
+
     // Social Links Form State
     socialLinksForm: {
         linkedin_url: string | null
@@ -198,6 +204,12 @@ export const useProfileStore = create<ProfileState>((set) => ({
 
     isViewApplicationDialogOpen: false,
     setViewApplicationDialogOpen: (isOpen) => set({ isViewApplicationDialogOpen: isOpen }),
+
+    isAutoApplyPreferencesDialogOpen: false,
+    setAutoApplyPreferencesDialogOpen: (isOpen) => set({ isAutoApplyPreferencesDialogOpen: isOpen }),
+
+    isCreateAutoApplyPreferencesDialogOpen: false,
+    setCreateAutoApplyPreferencesDialogOpen: (isOpen) => set({ isCreateAutoApplyPreferencesDialogOpen: isOpen }),
 
     // Social Links Form State
     socialLinksForm: {

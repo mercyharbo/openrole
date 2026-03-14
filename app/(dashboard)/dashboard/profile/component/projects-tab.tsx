@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import {
   Card,
-  CardAction,
   CardContent,
   CardHeader,
   CardTitle,
@@ -9,7 +8,6 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { useProfileStore } from "@/lib/store/profile-store"
 import { cn } from "@/lib/utils"
-import { Plus } from "lucide-react"
 
 import NextImage from "next/image"
 
@@ -18,7 +16,7 @@ import NextImage from "next/image"
  * Displays project entries or an empty state if none exists.
  */
 export function ProjectsTab() {
-  const { projects, setProjectsDialogOpen } = useProfileStore()
+  const { projects } = useProfileStore()
 
   const isEmpty = projects.length === 0
 
@@ -26,17 +24,6 @@ export function ProjectsTab() {
     <Card className="py-5 bg-muted/50">
       <CardHeader className="flex items-center justify-between">
         <CardTitle className="text-xl font-semibold">Projects</CardTitle>
-        <CardAction>
-          <Button
-            variant="outline"
-            size="lg"
-            className="gap-2 border-gray-200 px-6"
-            onClick={() => setProjectsDialogOpen(true)}
-          >
-            <Plus className="size-4" />
-            Add project
-          </Button>
-        </CardAction>
       </CardHeader>
       <Separator />
       <CardContent
