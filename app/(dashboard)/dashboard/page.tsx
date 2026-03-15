@@ -13,9 +13,10 @@ import { useApplicantProfile, useAutoApplyStats } from "@/hooks/use-queries"
 import {
   Briefcase,
   CheckCircle2,
-  XCircle,
+  Activity,
   Zap,
 } from "lucide-react"
+import Link from "next/link"
 
 /**
  * Dashboard Overview page.
@@ -37,9 +38,9 @@ export default function OverviewPage() {
       icon: CheckCircle2,
     },
     {
-      title: "Failed",
-      value: stats?.failed?.toString().padStart(2, '0') ?? "00",
-      icon: XCircle,
+      title: "Today's",
+      value: stats?.today_count?.toString().padStart(2, '0') ?? "00",
+      icon: Activity,
     },
     {
       title: "Daily Limit",
@@ -83,7 +84,9 @@ export default function OverviewPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">No applications yet</h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Start exploring jobs to see your application history here.</p>
-            <Button className="mt-8 gap-2">Explore Jobs</Button>
+            <Button className="mt-8 gap-2" asChild>
+              <Link href="/dashboard/jobs">Explore Jobs</Link>
+            </Button>
           </CardContent>
         </Card>
 
@@ -104,7 +107,9 @@ export default function OverviewPage() {
                   </div>
                 </div>
                 <p className="text-sm text-gray-500">Complete your profile to increase your chances of getting hired by 5x.</p>
-                <Button variant="outline" className="w-full">Edit Profile</Button>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/dashboard/profile">Edit Profile</Link>
+                </Button>
              </div>
           </CardContent>
         </Card>

@@ -37,10 +37,10 @@ export default function ToolsPage() {
       <Card className="relative overflow-hidden">
         <CardContent className="flex flex-col items-start justify-between gap-6 p-8 md:flex-row md:items-center">
           <div className="z-10 flex flex-col gap-3 md:max-w-[70%] lg:max-w-md">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-medium text-zinc-950 dark:text-zinc-50">
               Smart Assistance
             </h1>
-            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            <p className="text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
               Use AI to generate resumes, cover letters, and bio summaries in
               seconds.
             </p>
@@ -61,7 +61,7 @@ export default function ToolsPage() {
       {/* Smart Assist Section */}
       <Card>
         <CardHeader className="px-6">
-          <CardTitle className="text-base font-semibold text-gray-900 dark:text-white">
+          <CardTitle className="text-base font-medium text-zinc-950 dark:text-zinc-50">
             Smart Assist
           </CardTitle>
         </CardHeader>
@@ -78,7 +78,7 @@ export default function ToolsPage() {
       {/* All Resume Section */}
       <Card>
         <CardHeader className="px-6">
-          <CardTitle className="text-base font-semibold text-gray-900 dark:text-white">
+          <CardTitle className="text-base font-medium text-zinc-950 dark:text-zinc-50">
             All Resume
           </CardTitle>
         </CardHeader>

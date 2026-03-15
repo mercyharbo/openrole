@@ -7,10 +7,20 @@ import { useAuthStore } from "@/lib/store/auth-store"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
 export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegisterRoleSelection />
+    </Suspense>
+  )
+}
+
+function RegisterRoleSelection() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { userRole, setUserRole } = useAuthStore()
 
   const roles = [
@@ -28,7 +38,8 @@ export default function RegisterPage() {
 
   const handleContinue = () => {
     if (userRole) {
-      router.push("/register/details")
+      const queryString = searchParams.toString()
+      router.push(`/register/details${queryString ? `?${queryString}` : ""}`)
     }
   }
 
@@ -47,10 +58,10 @@ export default function RegisterPage() {
 
       {/* Header */}
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold text-black lg:text-3xl dark:text-white">
+        <h1 className="text-2xl font-medium text-zinc-950 lg:text-3xl dark:text-zinc-50">
           Choose who you are
         </h1>
-        <p className="text-label text-sm dark:text-gray-400">
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
           To get started, select your role
         </p>
       </div>
@@ -81,10 +92,10 @@ export default function RegisterPage() {
               />
             </div>
             <div className="space-y-2">
-              <h2 className="text-lg font-semibold text-black dark:text-white">
+              <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
                 {role.title}
               </h2>
-              <p className="text-label text-sm dark:text-gray-400">
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 {role.description}
               </p>
             </div>
@@ -97,13 +108,13 @@ export default function RegisterPage() {
         <Button
           onClick={handleContinue}
           disabled={!userRole}
-          className="h-12 w-full font-semibold"
+          className="h-12 w-full font-medium bg-[#172554] text-white hover:bg-blue-900 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
         >
           Continue
         </Button>
         <Button
           variant="secondary"
-          className="text-md h-12 w-full bg-[#E4E6EB] font-semibold text-black hover:bg-[#D8DADF] dark:bg-[#1E1F22] dark:text-white dark:hover:bg-[#2D2F33]"
+          className="text-md h-12 w-full bg-zinc-100 font-medium text-zinc-900 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-700"
           asChild
         >
           <Link href="/">Home</Link>

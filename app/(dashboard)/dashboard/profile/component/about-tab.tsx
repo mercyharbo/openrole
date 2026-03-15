@@ -59,7 +59,7 @@ export function AboutTab() {
     <main className="flex flex-col gap-5">
       <Card className="bg-muted/50">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base font-medium text-gray-400 dark:text-gray-500">
+          <CardTitle className="text-base font-medium text-zinc-600 dark:text-zinc-500">
             Personal Info
           </CardTitle>
           <Button
@@ -74,12 +74,12 @@ export function AboutTab() {
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3">
             {Object.entries(personalInfo).map(([key, value]) => (
               <div key={key} className="space-y-1">
-                <p className="text-xs text-gray-400 capitalize">
+                <p className="text-xs font-medium text-zinc-500 capitalize dark:text-zinc-400">
                   {key
                     .replace(/_/g, " ")
                     .replace(/\b(eu|uk|us)\b/gi, (m) => m.toUpperCase())}
                 </p>
-                <p className="text-sm text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
                   {typeof value === "boolean"
                     ? value
                       ? "Yes"
@@ -108,7 +108,7 @@ export function AboutTab() {
         {/* Educational Background */}
         <Card className="col-span-1 bg-muted/50 lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-medium text-gray-900 dark:text-white">
+            <CardTitle className="text-base font-medium text-zinc-950 dark:text-zinc-50">
               Educational Background
             </CardTitle>
             <Button
@@ -123,13 +123,13 @@ export function AboutTab() {
             {education ? (
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <p className="text-sm text-gray-400 dark:text-gray-500">
+                  <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                     {education.institution}
                   </p>
-                  <h4 className="text-base font-medium text-gray-900 dark:text-white">
+                  <h4 className="text-base font-medium text-zinc-950 dark:text-zinc-50">
                     {education.degree}
                   </h4>
-                  <p className="text-sm text-gray-400 dark:text-gray-500">
+                  <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                     {education.graduation_date}
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export function AboutTab() {
         {/* Social Links Section */}
         <Card className="col-span-1 bg-muted/50 border-0 shadow-none">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-medium text-gray-900 dark:text-white">
+            <CardTitle className="text-base font-medium text-zinc-950 dark:text-zinc-50">
               Social Links
             </CardTitle>
             <Button
@@ -181,7 +181,7 @@ export function AboutTab() {
                   <Button
                     key={social.label}
                     variant="outline"
-                    className="w-full justify-start gap-5 bg-[#E6F9F6] text-[#00A78E] border-[#D1F2ED] hover:bg-[#D1F2ED] transition-colors"
+                    className="w-full justify-start gap-5 bg-emerald-900/40 text-emerald-300 border-emerald-900/30 hover:bg-emerald-900/50 transition-colors"
                     asChild
                     size={'lg'}
                   >
@@ -196,7 +196,7 @@ export function AboutTab() {
                 <Button
                   key={social.label}
                   variant="outline"
-                  className="w-full justify-start gap-5 text-gray-400 cursor-not-allowed border-border dark:border-zinc-900"
+                  className="w-full justify-start gap-5 text-zinc-500 cursor-not-allowed border-zinc-200 dark:border-zinc-800"
                   disabled
                   size={'lg'}
                 >
@@ -214,7 +214,7 @@ export function AboutTab() {
         {/* Job Preferences as a card */}
         <Card className="bg-muted/50">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-medium text-gray-900 dark:text-white">
+            <CardTitle className="text-base font-medium text-zinc-950 dark:text-zinc-50">
               Job Preferences
             </CardTitle>
             <Button
@@ -229,12 +229,12 @@ export function AboutTab() {
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3">
               {Object.entries(jobPrefs).map(([key, value]) => (
                 <div key={key} className="space-y-1">
-                  <p className="text-xs text-gray-400 capitalize">
+                  <p className="text-xs font-medium text-zinc-500 capitalize dark:text-zinc-400">
                     {key
                       .replace(/_/g, " ")
                       .replace(/\b(eu|uk|us)\b/gi, (m) => m.toUpperCase())}
                   </p>
-                  <p className="text-sm text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
                     {typeof value === "boolean"
                       ? value
                         ? "Yes"
@@ -263,7 +263,7 @@ export function AboutTab() {
         {/* Compliance Data */}
         <Card className="bg-muted/50">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base font-medium text-gray-900 dark:text-white">
+            <CardTitle className="text-base font-medium text-zinc-950 dark:text-zinc-50">
               Compliance Data
             </CardTitle>
             <Button
@@ -279,12 +279,12 @@ export function AboutTab() {
               {Object.entries(complianceData).length > 0 ? (
                 Object.entries(complianceData).map(([key, value]) => (
                   <div key={key} className="space-y-1">
-                    <p className="text-xs text-gray-400 capitalize">
+                    <p className="text-xs font-medium text-zinc-500 capitalize dark:text-zinc-400">
                       {key
                         .replace(/_/g, " ")
                         .replace(/\b(eu|uk|us)\b/gi, (m) => m.toUpperCase())}
                     </p>
-                    <p className="text-sm text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
                       {typeof value === "boolean"
                         ? value
                           ? "Yes"

@@ -11,7 +11,8 @@ import { useApi } from "@/hooks/use-api"
 import { useAuthStore } from "@/lib/store/auth-store"
 import { ApplicantLoginResponse, User } from "@/types/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState, Suspense } from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -28,7 +29,18 @@ type LoginFormValues = z.infer<typeof loginSchema>
  * Provides a form for email and password entry with validation.
  */
 export default function AuthPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
+  )
+}
+
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirect_to")
+  
   const { 
     userRole, 
     setUserRole, 
@@ -103,7 +115,7 @@ export default function AuthPage() {
       }
       setUser(userData)
       
-      router.push("/dashboard")
+      router.push(redirectTo || "/dashboard")
     }
 
     setIsSubmitting(false)
@@ -119,14 +131,14 @@ export default function AuthPage() {
           </Link>
         </Button>
 
-        <div className="flex items-center gap-3 text-sm dark:text-gray-400">
+        <div className="flex items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
           Don&apos;t have an account?{" "}
           <Button
             variant={"link"}
-            className="h-fit px-0 font-semibold text-primary no-underline"
+            className="h-fit px-0 font-medium text-primary no-underline"
             asChild
           >
-            <Link href="/register">Sign up</Link>
+            <Link href={`/register${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}>Sign up</Link>
           </Button>
         </div>
       </div>
@@ -135,10 +147,10 @@ export default function AuthPage() {
         {/* Title & Subtext */}
         <div className="space-y-4">
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-gray-950 dark:text-white">
+            <h1 className="text-2xl font-medium text-zinc-950 dark:text-zinc-50">
               Sign In
             </h1>
-            <p className="text-sm text-balance text-black dark:text-gray-400">
+            <p className="text-sm text-balance text-zinc-600 dark:text-zinc-400">
               Fill your details to access your account as an applicant
             </p>
           </div>
@@ -152,7 +164,7 @@ export default function AuthPage() {
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-label block text-sm font-semibold"
+                className="block text-sm font-medium text-zinc-950 dark:text-zinc-50"
               >
                 Email Address
               </label>
@@ -177,7 +189,7 @@ export default function AuthPage() {
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="text-label block text-sm font-semibold"
+                className="block text-sm font-medium text-zinc-950 dark:text-zinc-50"
               >
                 Password
               </label>
@@ -233,14 +245,14 @@ export default function AuthPage() {
                 </div>
                 <label
                   htmlFor="remember"
-                  className="text-label cursor-pointer text-sm font-semibold"
+                  className="cursor-pointer text-sm font-medium text-zinc-900 dark:text-zinc-400"
                 >
                   Remember password
                 </label>
               </div>
               <Link
                 href="/forgot-password"
-                className="text-sm font-semibold text-black transition-colors hover:text-primary dark:text-gray-400"
+                className="text-sm font-medium text-zinc-600 transition-colors hover:text-primary dark:text-zinc-400"
               >
                 Forgot Password?
               </Link>
@@ -258,14 +270,13 @@ export default function AuthPage() {
           <Button
             type="submit"
             disabled={isSubmitting || !isValid}
-            className="flex h-12 w-full items-center justify-center gap-2 font-semibold transition-all dark:text-white"
+            className="flex h-12 w-full items-center justify-center gap-2 font-medium bg-[#172554] text-white hover:bg-blue-900 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
           >
             Sign In
           </Button>
         </form>
       </div>
 
-      <div className=""></div>
     </>
   )
 }

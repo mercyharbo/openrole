@@ -60,7 +60,7 @@ export default function ProfilePage() {
               {/* User Info */}
               <div className="flex flex-1 flex-col gap-4">
                 <div className="space-y-1">
-                  <h1 className="text-4xl font-semibold dark:text-white">
+                  <h1 className="text-4xl font-semibold dark:text-zinc-50">
                     {applicant?.full_name || "N/A"}
                   </h1>
                   <p className="max-w-xl text-sm leading-relaxed text-gray-600 dark:text-gray-400">
@@ -69,10 +69,10 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
                   <span>{applicant?.location || "N/A"}</span>
-                  <span className="size-1 rounded-full bg-gray-300 dark:bg-zinc-800" />
-                  <span className="font-semibold text-black dark:text-white">
+                  <span className="size-1 rounded-full bg-zinc-300 dark:bg-zinc-800" />
+                  <span className="font-medium text-zinc-950 dark:text-zinc-50">
                     Contact info
                   </span>
                 </div>
@@ -82,7 +82,7 @@ export default function ProfilePage() {
                     applicant.skills.slice(0, 3).map((skill) => (
                       <Badge
                         key={skill}
-                        className="h-8 rounded border-[#FDECCE] bg-[#FEFAF3] text-[#F59E0B]"
+                        className="h-8 rounded border-amber-900/30 bg-amber-900/40 text-amber-300"
                       >
                         {skill}
                       </Badge>
@@ -160,10 +160,10 @@ export default function ProfilePage() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "relative py-3 text-sm transition-colors",
+                  "relative py-3 text-sm font-medium transition-colors",
                   activeTab === tab.id
                     ? 'text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary after:content-[""]'
-                    : "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                    : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
                 )}
               >
                 {tab.label}

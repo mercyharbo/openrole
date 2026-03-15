@@ -2,6 +2,7 @@
 
 import {
   Briefcase,
+  CreditCard,
   HelpCircle,
   LayoutDashboard,
   LogOut,
@@ -48,6 +49,11 @@ const navMain = [
     url: "/dashboard/ai-tools",
     icon: Sparkles,
   },
+  {
+    title: "Billing",
+    url: "/dashboard/billing",
+    icon: CreditCard,
+  },
 ]
 
 const navSecondary = [
@@ -85,10 +91,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar
-      className="border-none text-white dark:border-r dark:border-zinc-800 dark:bg-zinc-950"
+      className="border-none text-white dark:border-r dark:border-zinc-800"
       style={
         {
-          "--sidebar": "#40444D",
+          "--sidebar": "#172554",
+          "--sidebar-foreground": "#ffffff",
         } as React.CSSProperties
       }
       {...props}
@@ -104,7 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="object-contain"
             />
           </div>
-          <span className="text-xl font-bold tracking-tight">IBK</span>
+          <span className="text-xl font-medium tracking-tight">IBK</span>
         </Link>
       </SidebarHeader>
 
@@ -120,15 +127,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className={cn(
                     "h-11 px-4 transition-colors",
                     isActive
-                      ? "bg-white text-[#40444D] hover:bg-white hover:text-[#40444D]"
-                      : "text-white/70 hover:bg-white/10 hover:text-white"
+                      ? "bg-white text-[#09090b] hover:bg-white hover:text-[#09090b]"
+                      : "text-white hover:bg-white/10 hover:text-white"
                   )}
                 >
                   <Link href={item.url} className="flex items-center gap-3">
                     <item.icon
                       className={cn(
                         "size-5",
-                        isActive ? "text-[#40444D]" : "text-current"
+                        isActive ? "text-zinc-950" : "text-current"
                       )}
                     />
                     <span className="font-medium">{item.title}</span>
@@ -149,7 +156,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   tooltip={item.title}
-                  className="h-11 px-4 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                  className="h-11 px-4 text-white hover:bg-white/10 hover:text-white"
                   onClick={isLogout ? handleLogout : undefined}
                 >
                   <Link href={item.url} className="flex items-center gap-3">

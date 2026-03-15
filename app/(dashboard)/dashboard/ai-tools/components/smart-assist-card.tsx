@@ -40,10 +40,10 @@ export function SmartAssistCard({ title, description }: SmartAssistCardProps) {
         onClick={() => setIsOpen(true)}
         className="group relative flex min-h-[240px] cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-gray-200 bg-white p-8 text-center transition-all hover:border-primary/50 hover:bg-gray-50/50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-primary/50 dark:hover:bg-zinc-900/40"
       >
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+        <h3 className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
           {title}
         </h3>
-        <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="text-sm font-medium leading-relaxed text-zinc-600 dark:text-zinc-400">
           {description}
         </p>
       </div>

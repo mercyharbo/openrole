@@ -49,7 +49,7 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
     <header className="flex h-20 shrink-0 items-center justify-between border-b bg-white px-8 dark:border-zinc-800 dark:bg-zinc-950">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="-ml-1 lg:hidden" />
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+        <h2 className="text-xl font-semibold text-zinc-950 dark:text-zinc-50">
           {title}
         </h2>
       </div>
@@ -59,14 +59,14 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
           <Button
             variant="outline"
             size="icon"
-            className="text-gray-500 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-gray-400 dark:hover:bg-zinc-800"
+            className="text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             <HelpCircle className="size-5" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            className="relative text-gray-500 transition-colors hover:bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-gray-400 dark:hover:bg-zinc-800"
+            className="relative text-zinc-600 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             <Bell className="size-5" />
             <span className="absolute top-2 right-2 size-2 rounded-full border-2 border-white bg-red-500 dark:border-zinc-950" />
@@ -89,7 +89,7 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
                       .join("") || "U"}
                   </AvatarFallback>
                 </Avatar>
-                <span className="hidden font-medium text-gray-950 sm:block dark:text-white">
+                <span className="hidden font-medium text-zinc-950 sm:block dark:text-zinc-50">
                   {user?.username || "N/A"}
                 </span>
               </button>

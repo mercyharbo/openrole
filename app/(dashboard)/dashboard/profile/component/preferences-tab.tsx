@@ -68,7 +68,7 @@ export function PreferencesTab() {
     <main className="flex flex-col gap-5">
       <Card className="space-y-5 bg-muted/50">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base font-medium text-gray-900 dark:text-white">
+          <CardTitle className="text-base font-medium text-zinc-950 dark:text-zinc-50">
             Auto Apply Preferences
           </CardTitle>
           <Button
@@ -83,7 +83,7 @@ export function PreferencesTab() {
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 md:grid-cols-3">
             {preferenceFields.map((field) => (
               <div key={field.label} className="space-y-5">
-                <p className="text-sm font-semibold">{field.label}</p>
+                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{field.label}</p>
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {Array.isArray(field.value) ? (
                     field.value.length > 0 ? (
@@ -113,7 +113,7 @@ export function PreferencesTab() {
                       {field.value}
                     </Badge>
                   ) : (
-                    <p className="text-sm text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
                       {field.value}
                     </p>
                   )}

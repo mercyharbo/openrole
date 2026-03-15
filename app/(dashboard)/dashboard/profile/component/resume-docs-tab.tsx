@@ -132,17 +132,17 @@ export function ResumeDocsTab() {
       {/* Resume Section */}
       <Card className="border-0 bg-muted/50">
         <CardHeader className="flex flex-col gap-4">
-          <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
+          <CardTitle className="text-xl font-medium text-zinc-950 dark:text-zinc-50">
             Resume
           </CardTitle>
           <div className="flex gap-4">
             <Button
               type="button"
               className={cn(
-                "h-10 flex-1",
+                "h-10 flex-1 font-medium",
                 resumeMode === "upload"
-                  ? "bg-primary text-white"
-                  : "border border-primary bg-transparent text-primary hover:bg-primary/10"
+                  ? "bg-[#172554] text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "border border-zinc-200 bg-transparent text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900"
               )}
               onClick={() => setResumeMode("upload")}
             >
@@ -151,10 +151,10 @@ export function ResumeDocsTab() {
             <Button
               type="button"
               className={cn(
-                "h-10 flex-1",
+                "h-10 flex-1 font-medium",
                 resumeMode === "paste"
-                  ? "bg-primary text-white"
-                  : "border border-primary bg-transparent text-primary hover:bg-primary/10"
+                  ? "bg-[#172554] text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "border border-zinc-200 bg-transparent text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900"
               )}
               onClick={() => setResumeMode("paste")}
             >
@@ -200,8 +200,8 @@ export function ResumeDocsTab() {
               ) : (
                 <div className="flex flex-col items-center gap-2">
                   <div className="flex items-center gap-3">
-                    <Folder className="size-6 fill-[#FFB02E] text-[#FFB02E]" />
-                    <p className="text-lg font-medium text-gray-950 dark:text-white">
+                    <Folder className="size-6 fill-amber-500 text-amber-500" />
+                    <p className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
                       Click or drag PDF here
                     </p>
                   </div>
@@ -237,7 +237,7 @@ export function ResumeDocsTab() {
       {/* Supporting Documents Section */}
       <Card className="border-0 bg-muted/50">
         <CardHeader className="flex flex-col gap-2">
-          <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
+          <CardTitle className="text-xl font-medium text-zinc-950 dark:text-zinc-50">
             Supporting Documents
           </CardTitle>
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -259,12 +259,12 @@ export function ResumeDocsTab() {
                   <div className="flex items-center justify-between px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="relative flex size-10 items-center justify-center rounded-lg border border-gray-100 bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900">
-                        <FileText className="size-5 text-gray-400 dark:text-gray-500" />
-                        <div className="absolute -right-1 -bottom-1 flex h-3.5 items-center justify-center rounded-sm bg-gray-200 px-1.5 text-[7px] font-bold text-gray-600 dark:bg-zinc-800 dark:text-gray-400">
+                        <FileText className="size-5 text-zinc-400 dark:text-zinc-500" />
+                        <div className="absolute -right-1 -bottom-1 flex h-3.5 items-center justify-center rounded-sm bg-zinc-200 px-1.5 text-[7px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                           {doc.doc_type.toUpperCase().replace("_", " ")}
                         </div>
                       </div>
-                      <span className="text-[15px] font-medium text-gray-900 dark:text-gray-100">
+                      <span className="text-[15px] font-medium text-zinc-950 dark:text-zinc-50">
                         {doc.name}
                       </span>
                     </div>
@@ -302,7 +302,7 @@ export function ResumeDocsTab() {
           </div>
 
           <div className="space-y-6 border-t border-gray-100 pt-6 dark:border-zinc-800">
-            <h3 className="text-base font-bold text-gray-950 dark:text-white">
+            <h3 className="text-base font-medium text-zinc-950 dark:text-zinc-50">
               Upload New Document
             </h3>
 
@@ -392,8 +392,8 @@ export function ResumeDocsTab() {
                 ) : (
                   <div className="flex flex-col items-center gap-2">
                     <div className="flex items-center gap-3">
-                      <Folder className="size-6 fill-[#FFB02E] text-[#FFB02E]" />
-                      <p className="text-lg font-medium text-gray-950 dark:text-white">
+                      <Folder className="size-6 fill-amber-500 text-amber-500" />
+                      <p className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
                         Click or drag PDF here
                       </p>
                     </div>
@@ -406,7 +406,7 @@ export function ResumeDocsTab() {
             </div>
 
             <Button
-              className="h-11 w-full text-white"
+              className="h-11 w-full font-medium bg-[#172554] text-white hover:bg-blue-900 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
               onClick={handleDocUpload}
               disabled={isUploadingDoc || !selectedDocFile}
             >

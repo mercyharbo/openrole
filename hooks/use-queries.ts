@@ -1,5 +1,9 @@
+import { ApiResponse } from '@/types/api-response'
 import { Applicant } from '@/types/applicant'
 import { Job } from '@/types/jobs'
+import { AutoApplyApplication, AutoApplyPreferences, AutoApplyStats } from '@/types/auto-apply'
+import { BillingBalance, BillingHistory, BillingPlan, BillingSubscription } from '@/types/billing'
+import { Document } from '@/types/document'
 import { useFetch } from './use-fetch'
 
 /**
@@ -9,7 +13,7 @@ import { useFetch } from './use-fetch'
 // --- APPLICANT QUERIES ---
 
 export const useApplicantProfile = () => {
-    const { data: response, error, isLoading, mutate } = useFetch<{ data: Applicant; error: string | null }>('applicants/me', {
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<Applicant>>('applicants/me', {
         refreshInterval: 10000, // 5 minutes
     })
     return {
@@ -25,7 +29,7 @@ export const useApplicantProfile = () => {
 // --- JOB QUERIES ---
 
 export const useJobs = () => {
-    const { data: response, error, isLoading, mutate } = useFetch<{ data: Job[]; error: string | null }>('jobs')
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<Job[]>>('jobs')
     return {
         jobs: response?.data ?? null,
         error: error || response?.error,
@@ -36,19 +40,8 @@ export const useJobs = () => {
 
 // --- DOCUMENT QUERIES ---
 
-export interface Document {
-    id: string
-    applicant_id: string
-    name: string
-    doc_type: string
-    file_url: string
-    extracted_text: string
-    extracted_data: Record<string, unknown>
-    created_at: string
-}
-
 export const useDocuments = () => {
-    const { data: response, error, isLoading, mutate } = useFetch<{ data: Document[]; error: string | null }>('applicants/me/documents')
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<Document[]>>('applicants/me/documents')
     return {
         documents: response?.data ?? [],
         error: error || response?.error,
@@ -57,24 +50,8 @@ export const useDocuments = () => {
     }
 }
 
-export interface AutoApplyPreferences {
-    id: string
-    applicant_id: string
-    job_titles: string[]
-    work_modes: string[]
-    countries: string[]
-    experience_levels: string[]
-    salary_min: number
-    salary_max: number
-    max_daily_applications: number
-    is_enabled: boolean
-    created_at: string
-    updated_at: string
-    expanded_titles: string[]
-}
-
 export const useAutoApplyPreferences = () => {
-    const { data: response, error, isLoading, mutate } = useFetch<{ data: AutoApplyPreferences; error: string | null }>('applicants/auto-apply/preferences')
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<AutoApplyPreferences>>('applicants/auto-apply/preferences')
     return {
         preferences: response?.data ?? null,
         error: error || response?.error,
@@ -83,20 +60,61 @@ export const useAutoApplyPreferences = () => {
     }
 }
 
-export interface AutoApplyStats {
-    total_applications: number
-    successful: number
-    failed: number
-    today_count: number
-    daily_limit: number
-}
-
 export const useAutoApplyStats = () => {
-    const { data: response, error, isLoading, mutate } = useFetch<{ data: AutoApplyStats; error: string | null }>('applicants/auto-apply/stats')
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<AutoApplyStats>>('applicants/auto-apply/stats')
     return {
         stats: response?.data ?? null,
         error: error || response?.error,
         isLoading,
         refreshStats: mutate,
+    }
+}
+export const useAutoApplyApplications = (limit: number = 50) => {
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<AutoApplyApplication[]>>(`applicants/auto-apply/applications?limit=${limit}`)
+    return {
+        applications: response?.data ?? null,
+        error: error || response?.error,
+        isLoading,
+        refreshApplications: mutate,
+    }
+}
+
+export const useBillingBalance = () => {
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<BillingBalance>>('billing/balance')
+    return {
+        balance: response?.data ?? null,
+        error: error || response?.error,
+        isLoading,
+        refreshBalance: mutate,
+    }
+}
+
+export const useBillingPlans = () => {
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<BillingPlan[]>>('billing/plans')
+    return {
+        plans: response?.data ?? [],
+        error: error || response?.error,
+        isLoading,
+        refreshPlans: mutate,
+    }
+}
+
+export const useBillingSubscription = () => {
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<BillingSubscription>>('billing/subscription')
+    return {
+        subscription: response?.data ?? null,
+        error: error || response?.error,
+        isLoading,
+        refreshSubscription: mutate,
+    }
+}
+
+export const useBillingHistory = () => {
+    const { data: response, error, isLoading, mutate } = useFetch<ApiResponse<BillingHistory[]>>('billing/history')
+    return {
+        history: response?.data ?? [],
+        error: error || response?.error,
+        isLoading,
+        refreshHistory: mutate,
     }
 }

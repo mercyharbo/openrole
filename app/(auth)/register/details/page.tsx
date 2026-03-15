@@ -8,11 +8,22 @@ import { cn } from "@/lib/utils"
 import { LoginResponse as RegistrationResponse } from "@/types/auth"
 import { Check, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState, Suspense } from "react"
 
 export default function DetailsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DetailsForm />
+    </Suspense>
+  )
+}
+
+function DetailsForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirect_to")
+
   const {
     userRole,
     registrationEmail,
@@ -114,7 +125,7 @@ export default function DetailsPage() {
       setTokens(regData.tokens.access_token, regData.tokens.refresh_token)
       setUser(regData.data)
       console.log("Registration success:", regData.message)
-      router.push("/dashboard")
+      router.push(redirectTo || "/dashboard")
     }
 
     setIsSubmitting(false)
@@ -125,10 +136,10 @@ export default function DetailsPage() {
   return (
     <div className="3xl:max-w-2xl w-full max-w-sm space-y-8 sm:max-w-md md:max-w-lg lg:max-w-xl">
       <div className="space-y-3">
-        <h1 className="text-3xl font-bold text-black dark:text-white">
+        <h1 className="text-3xl font-medium text-zinc-950 dark:text-zinc-50">
           Complete your registration
         </h1>
-        <p className="text-label text-sm dark:text-gray-400">
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
           As a {userRole === "applicant" ? "Talent" : "Employer"}, please
           provide your details
         </p>
@@ -138,7 +149,7 @@ export default function DetailsPage() {
         <div className="space-y-6">
           {/* Email Address */}
           <div className="flex flex-col gap-3">
-            <label className="text-label text-sm dark:text-gray-300">
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
               Email Address*
             </label>
             <Input
@@ -146,32 +157,32 @@ export default function DetailsPage() {
               placeholder="ezeumechukwu@gmail.com"
               value={registrationEmail}
               onChange={(e) => setRegistrationEmail(e.target.value)}
-              className="h-12 rounded-lg border-slate-200 bg-slate-50/50 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+              className="h-12 rounded-lg border-zinc-200 bg-zinc-50/50 text-zinc-950 placeholder:text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-50 dark:placeholder:text-zinc-500"
             />
           </div>
 
           {/* Name Row */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-3">
-              <label className="text-label text-sm dark:text-gray-300">
+              <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 First Name*
               </label>
               <Input
                 placeholder="John"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="h-12 rounded-lg border-slate-200 bg-slate-50/50 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+                className="h-12 rounded-lg border-zinc-200 bg-zinc-50/50 text-zinc-950 placeholder:text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-50 dark:placeholder:text-zinc-500"
               />
             </div>
             <div className="flex flex-col gap-3">
-              <label className="text-label text-sm dark:text-gray-300">
+              <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 Last Name*
               </label>
               <Input
                 placeholder="Osimhen"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="h-12 rounded-lg border-slate-200 bg-slate-50/50 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+                className="h-12 rounded-lg border-zinc-200 bg-zinc-50/50 text-zinc-950 placeholder:text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-50 dark:placeholder:text-zinc-500"
               />
             </div>
           </div>
@@ -191,21 +202,21 @@ export default function DetailsPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              <label className="text-label text-sm dark:text-gray-300">
+              <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 Username*
               </label>
               <Input
                 placeholder="Enter username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="h-12 rounded-lg border-slate-200 bg-slate-50/50 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+                className="h-12 rounded-lg border-zinc-200 bg-zinc-50/50 text-zinc-950 placeholder:text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-50 dark:placeholder:text-zinc-500"
               />
             </div>
           )}
 
           {/* Password Field */}
           <div className="flex flex-col gap-3">
-            <label className="text-label text-sm dark:text-gray-300">
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
               Password
             </label>
             <div className="relative">
@@ -214,12 +225,12 @@ export default function DetailsPage() {
                 placeholder="Enter Password"
                 value={passwordValue}
                 onChange={(e) => setPasswordValue(e.target.value)}
-                className="h-12 rounded-lg border-slate-200 bg-slate-50/50 pr-12 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+                className="h-12 rounded-lg border-zinc-200 bg-zinc-50/50 pr-12 text-zinc-950 placeholder:text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-50 dark:placeholder:text-zinc-500"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-1/2 right-4 -translate-y-1/2 text-black/40 transition-colors hover:text-black/60 dark:text-white/40 dark:hover:text-white/60"
+                className="absolute top-1/2 right-4 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
               >
                 {showPassword ? (
                   <EyeOff className="size-5" />
@@ -245,10 +256,10 @@ export default function DetailsPage() {
                     />
                     <span
                       className={cn(
-                        "text-xs transition-colors",
+                        "text-xs font-medium transition-colors",
                         met
-                          ? "text-black dark:text-white"
-                          : "text-black/40 dark:text-white/40"
+                          ? "text-zinc-900 dark:text-zinc-100"
+                          : "text-zinc-400 dark:text-zinc-500"
                       )}
                     >
                       {req.label}
@@ -261,7 +272,7 @@ export default function DetailsPage() {
 
           {/* Confirm Password Field */}
           <div className="flex flex-col gap-3">
-            <label className="text-label text-sm dark:text-gray-300">
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
               Confirm Password
             </label>
             <div className="relative">
@@ -270,12 +281,12 @@ export default function DetailsPage() {
                 placeholder="Confirm Password"
                 value={confirmPasswordValue}
                 onChange={(e) => setConfirmPasswordValue(e.target.value)}
-                className="h-12 rounded-lg border-slate-200 bg-slate-50/50 pr-12 placeholder:text-black/40 dark:border-slate-800 dark:bg-slate-900/50 dark:placeholder:text-white/40"
+                className="h-12 rounded-lg border-zinc-200 bg-zinc-50/50 pr-12 text-zinc-950 placeholder:text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-50 dark:placeholder:text-zinc-500"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute top-1/2 right-4 -translate-y-1/2 text-black/40 transition-colors hover:text-black/60 dark:text-white/40 dark:hover:text-white/60"
+                className="absolute top-1/2 right-4 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
               >
                 {showConfirmPassword ? (
                   <EyeOff className="size-5" />
@@ -295,18 +306,18 @@ export default function DetailsPage() {
         )}
 
         <div className="space-y-8 pt-4">
-          <p className="text-sm leading-relaxed font-medium text-black/60 dark:text-white/60">
+          <p className="text-sm leading-relaxed font-medium text-zinc-500 dark:text-zinc-400">
             By signing up you agree to our{" "}
             <Link
               href="/terms"
-              className="font-semibold text-black underline dark:text-white"
+              className="font-medium text-zinc-950 underline dark:text-zinc-50"
             >
               Terms & Conditions
             </Link>{" "}
             and{" "}
             <Link
               href="/privacy"
-              className="font-semibold text-black underline dark:text-white"
+              className="font-medium text-zinc-950 underline dark:text-zinc-50"
             >
               Privacy Policy
             </Link>
@@ -315,7 +326,7 @@ export default function DetailsPage() {
           <Button
             type="submit"
             disabled={isSubmitting || !isFormValid}
-            className="text-md h-12 w-full font-semibold"
+            className="text-md h-12 w-full font-medium bg-[#172554] text-white hover:bg-blue-900 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
           >
             {isSubmitting ? "Creating account..." : "Create your account"}
           </Button>
