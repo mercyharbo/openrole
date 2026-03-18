@@ -21,21 +21,22 @@ export const useApi = () => {
             // Check if the response follows the enveloped error pattern even with 200 status
             // Pattern: {"data": {"detail": "Error"}, "error": null} OR {"error": "Error"}
             const resData = response.data
+            // Every response from the proxy route.ts is enveloped: { data: ..., error: ... }
             if (resData) {
-                // If there's an explicit non-null 'error' field
+                // Check for explicit error field first
                 if (resData.error !== null && resData.error !== undefined && resData.error !== '') {
                     return { data: null, error: extractErrorMessage(resData) }
                 }
                 
-                // If there's a 'detail' field anywhere that indicates an error
-                // In some APIs, detail only exists when there's an error
-                const logicalError = (resData.detail || resData.data?.detail)
+                // Then check for "logical" error details from backend (FastAPI/etc)
+                const logicalError = resData.detail || resData.data?.detail
                 if (logicalError) {
                     return { data: null, error: extractErrorMessage(resData) }
                 }
             }
 
-            return { data: response.data, error: null }
+            // Unwrap: resData.data is the actual payload from the backend
+            return { data: resData?.data ?? resData, error: null }
         } catch (err: unknown) {
             let errorMessage = 'Request failed'
             if (axios.isAxiosError(err) || (err && typeof err === 'object' && 'response' in err)) {

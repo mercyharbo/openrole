@@ -21,6 +21,14 @@ import { FileText, Folder, Loader2, Trash2 } from "lucide-react"
 import { toast } from "react-toastify"
 import { DeleteDocumentDialog } from "./delete-document-dialog"
 
+const DOC_TYPE_MAP: Record<string, string> = {
+  "Recommendation Letter": "recommendation",
+  "Certificate": "certificate",
+  "Cover Letter": "cover_letter",
+  "Transcript": "transcript",
+  "Other": "other",
+}
+
 export function ResumeDocsTab() {
   const {
     resumeMode,
@@ -58,12 +66,14 @@ export function ResumeDocsTab() {
     formData.append("file", file)
 
     try {
+      // Use the now-fixed useApi hook which supports binary uploads and unwraps data correctly
       const { error } = await post("applicants/resume/upload", formData)
       if (error) throw new Error(error)
       toast.success("Resume uploaded successfully")
     } catch (err: unknown) {
       console.error("Resume upload error:", err)
-      const errorMsg = err instanceof Error ? err.message : "Failed to upload resume"
+      const errorMsg =
+        err instanceof Error ? err.message : "Failed to upload resume"
       toast.error(errorMsg)
     } finally {
       setIsUploadingResume(false)
@@ -84,7 +94,8 @@ export function ResumeDocsTab() {
       toast.success("Resume text saved successfully")
     } catch (err: unknown) {
       console.error("Resume save error:", err)
-      const errorMsg = err instanceof Error ? err.message : "Failed to save resume text"
+      const errorMsg =
+        err instanceof Error ? err.message : "Failed to save resume text"
       toast.error(errorMsg)
     } finally {
       setIsUploadingResume(false)
@@ -109,18 +120,20 @@ export function ResumeDocsTab() {
     const formData = new FormData()
     formData.append("file", selectedDocFile)
     formData.append("name", docName)
-    formData.append("doc_type", docType.toLowerCase().replace(" ", "_"))
+    formData.append("doc_type", DOC_TYPE_MAP[docType] || docType.toLowerCase())
 
     try {
-      const { error } = await post("applicants/documents", formData)
+      const { error } = await post("applicants/me/documents", formData)
       if (error) throw new Error(error)
+
       toast.success("Document uploaded successfully")
       setDocName("")
       setSelectedDocFile(null)
       refreshDocuments()
     } catch (err: unknown) {
       console.error("Document upload error:", err)
-      const errorMsg = err instanceof Error ? err.message : "Failed to upload document"
+      const errorMsg =
+        err instanceof Error ? err.message : "Failed to upload document"
       toast.error(errorMsg)
     } finally {
       setIsUploadingDoc(false)
@@ -128,7 +141,7 @@ export function ResumeDocsTab() {
   }
 
   return (
-    <Card className="flex flex-col gap-5 p-5 bg-muted/50">
+    <Card className="flex flex-col gap-5 bg-muted/50 p-5">
       {/* Resume Section */}
       <Card className="border-0 bg-muted/50">
         <CardHeader className="flex flex-col gap-4">
@@ -406,7 +419,7 @@ export function ResumeDocsTab() {
             </div>
 
             <Button
-              className="h-11 w-full font-medium bg-[#172554] text-white hover:bg-blue-900 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
+              className="h-11 w-full bg-[#172554] font-medium text-white hover:bg-blue-900 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
               onClick={handleDocUpload}
               disabled={isUploadingDoc || !selectedDocFile}
             >

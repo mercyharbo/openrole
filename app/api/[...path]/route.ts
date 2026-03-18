@@ -36,15 +36,23 @@ async function handleRequest(
 
         const headers: Record<string, string> = {}
         request.headers.forEach((value, key) => {
-            // Exclude host header as it can cause issues when proxying
-            if (key.toLowerCase() !== 'host') {
+            const lowKey = key.toLowerCase()
+            // Exclude headers that can cause issues when proxying or are handled by axios
+            if (!['host', 'content-length', 'connection', 'transfer-encoding'].includes(lowKey)) {
                 headers[key] = value
             }
         })
 
-        let body = null
+        let body: unknown = null
         if (['POST', 'PUT', 'PATCH'].includes(method)) {
-            body = await request.json().catch(() => null)
+            const contentType = request.headers.get('content-type') || ''
+            if (contentType.includes('application/json')) {
+                body = await request.json().catch(() => null)
+            } else {
+                // Support binary/form-data by using arrayBuffer
+                const arrayBuffer = await request.arrayBuffer()
+                body = Buffer.from(arrayBuffer)
+            }
         }
 
         const response = await axios({

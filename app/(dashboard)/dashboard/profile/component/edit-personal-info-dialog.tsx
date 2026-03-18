@@ -75,18 +75,18 @@ export function EditPersonalInfoDialog() {
     if (isPersonalInfoDialogOpen && applicant) {
       form.reset({
         personal_info: {
-          phone: (applicant.personal_info as Record<string, unknown>)?.phone as string || "",
-          date_of_birth: (applicant.personal_info as Record<string, unknown>)?.date_of_birth as string || "",
-          nationality: (applicant.personal_info as Record<string, unknown>)?.nationality as string || "",
-          address_city: (applicant.personal_info as Record<string, unknown>)?.address_city as string || "",
-          address_country: (applicant.personal_info as Record<string, unknown>)?.address_country as string || "",
-          address_postal_code: (applicant.personal_info as Record<string, unknown>)?.address_postal_code as string || "",
-          address_state: (applicant.personal_info as Record<string, unknown>)?.address_state as string || "",
-          address_street: (applicant.personal_info as Record<string, unknown>)?.address_street as string || "",
-          country_of_residence: (applicant.personal_info as Record<string, unknown>)?.country_of_residence as string || "",
-          emergency_contact_name: (applicant.personal_info as Record<string, unknown>)?.emergency_contact_name as string || "",
-          emergency_contact_phone: (applicant.personal_info as Record<string, unknown>)?.emergency_contact_phone as string || "",
-          emergency_contact_relationship: (applicant.personal_info as Record<string, unknown>)?.emergency_contact_relationship as string || "",
+          phone: applicant.personal_info?.phone || "",
+          date_of_birth: applicant.personal_info?.date_of_birth || "",
+          nationality: applicant.personal_info?.nationality || "",
+          address_city: applicant.personal_info?.address_city || "",
+          address_country: applicant.personal_info?.address_country || "",
+          address_postal_code: applicant.personal_info?.address_postal_code || "",
+          address_state: applicant.personal_info?.address_state || "",
+          address_street: applicant.personal_info?.address_street || "",
+          country_of_residence: applicant.personal_info?.country_of_residence || "",
+          emergency_contact_name: applicant.personal_info?.emergency_contact_name || "",
+          emergency_contact_phone: applicant.personal_info?.emergency_contact_phone || "",
+          emergency_contact_relationship: applicant.personal_info?.emergency_contact_relationship || "",
         },
       })
     }

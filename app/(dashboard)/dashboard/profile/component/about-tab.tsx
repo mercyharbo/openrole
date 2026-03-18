@@ -44,16 +44,13 @@ export function AboutTab() {
 
   if (!applicant) return null
 
-  const education = (applicant.personal_info as Record<string, unknown>)
-    ?.education as
-    | { institution: string; degree: string; graduation_date: string }
-    | undefined
-  const personalInfo =
-    (applicant.personal_info as Record<string, unknown>) || {}
-  const jobPrefs = (applicant.job_preferences as Record<string, unknown>) || {}
-  const complianceData =
-    (applicant.compliance_data as Record<string, unknown>) || {}
+  const personalInfo = applicant.personal_info || {}
+  const jobPrefs = applicant.job_preferences || {}
+  const complianceData = applicant.compliance_data || {}
   const socialLinks = applicant.social_links || {}
+
+  // According to the new structure, education is in resolved_profile or extracted_profile
+  const education = applicant.resolved_profile?.education_list?.[0]
 
   return (
     <main className="flex flex-col gap-5">
@@ -124,13 +121,13 @@ export function AboutTab() {
               <div className="space-y-4">
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {education.institution}
+                    {education.institution || "N/A"}
                   </p>
                   <h4 className="text-base font-medium text-zinc-950 dark:text-zinc-50">
-                    {education.degree}
+                    {education.degree || "N/A"} {education.field_of_study ? `in ${education.field_of_study}` : ""}
                   </h4>
                   <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                    {education.graduation_date}
+                    Graduation Year: {education.graduation_year || "N/A"}
                   </p>
                 </div>
 

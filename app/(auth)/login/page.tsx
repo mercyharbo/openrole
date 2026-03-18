@@ -138,14 +138,18 @@ function LoginForm() {
             className="h-fit px-0 font-medium text-primary no-underline"
             asChild
           >
-            <Link href={`/register${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}>Sign up</Link>
+            <Link
+              href={`/register${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}
+            >
+              Sign up
+            </Link>
           </Button>
         </div>
       </div>
 
-      <div className="3xl:max-w-2xl w-full max-w-sm space-y-8 sm:max-w-md md:max-w-lg lg:max-w-xl">
-        {/* Title & Subtext */}
-        <div className="space-y-4">
+      <div className="flex flex-1 flex-col items-center justify-center w-full py-10">
+        <div className="3xl:max-w-2xl w-full max-w-sm space-y-8 sm:max-w-md md:max-w-lg lg:max-w-xl">
+          {/* Title & Subtext */}
           <div className="space-y-2">
             <h1 className="text-2xl font-medium text-zinc-950 dark:text-zinc-50">
               Sign In
@@ -154,11 +158,9 @@ function LoginForm() {
               Fill your details to access your account as an applicant
             </p>
           </div>
-        </div>
-
 
         {/* Sign In Form */}
-        <form className="space-y-6" onSubmit={handleSubmit(handleLoginSubmit)}>
+        <form className="space-y-6 " onSubmit={handleSubmit(handleLoginSubmit)}>
           <div className="space-y-5">
             {/* Email Field */}
             <div className="space-y-2">
@@ -270,13 +272,15 @@ function LoginForm() {
           <Button
             type="submit"
             disabled={isSubmitting || !isValid}
-            className="flex h-12 w-full items-center justify-center gap-2 font-medium bg-[#172554] text-white hover:bg-blue-900 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
+            className="flex h-12 w-full items-center justify-center gap-2 bg-[#172554] font-medium text-white hover:bg-blue-900 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
           >
             Sign In
           </Button>
         </form>
-      </div>
 
+        <div className=""></div>
+      </div>
+    </div>
     </>
   )
 }

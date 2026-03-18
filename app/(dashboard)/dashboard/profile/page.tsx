@@ -11,13 +11,14 @@ import { Linkedin, MoreHorizontal, Share2, Twitter } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { AboutTab } from "./component/about-tab"
+import { ExperienceTab } from "./component/experience-tab"
 import { PreferencesTab } from "./component/preferences-tab"
 import { ProjectsTab } from "./component/projects-tab"
 import { ResumeDocsTab } from "./component/resume-docs-tab"
 
 const tabs = [
-  { label: "About", id: "about" },
   { label: "Preferences", id: "preferences" },
+  { label: "Experience", id: "experience" },
   { label: "Projects", id: "projects" },
   { label: "Resume & Docs", id: "resume" },
 ]
@@ -58,40 +59,64 @@ export default function ProfilePage() {
               </Avatar>
 
               {/* User Info */}
-              <div className="flex flex-1 flex-col gap-4">
-                <div className="space-y-1">
-                  <h1 className="text-4xl font-semibold dark:text-zinc-50">
-                    {applicant?.full_name || "N/A"}
-                  </h1>
-                  <p className="max-w-xl text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                    {applicant?.current_job_role || "Job Seeker"} |{" "}
-                    {applicant?.current_company || "Looking for opportunities"}
-                  </p>
+              <div className="flex flex-1 flex-col gap-5">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-4xl font-semibold dark:text-zinc-50">
+                      {applicant?.full_name || "N/A"}
+                    </h1>
+                    {applicant?.extracted_profile?.basic_profile?.seniority_level && (
+                      <Badge variant="secondary" className="capitalize h-6 bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/30 dark:text-blue-400">
+                        {applicant.extracted_profile.basic_profile.seniority_level}
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <p className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+                      {applicant?.extracted_profile?.profile_summary?.headline || 
+                       `${applicant?.extracted_profile?.basic_profile?.primary_role || applicant?.current_job_role || "Job Seeker"} at ${applicant?.extracted_profile?.basic_profile?.current_company || applicant?.current_company || "Focusing on career growth"}`}
+                    </p>
+                    <p className="max-w-2xl text-[15px] leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-2">
+                      {applicant?.extracted_profile?.profile_summary?.executive_summary}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-                  <span>{applicant?.location || "N/A"}</span>
+                  <span className="flex items-center gap-1.5">
+                    {applicant?.location || applicant?.extracted_profile?.availability_and_location?.current_location || "N/A"}
+                  </span>
                   <span className="size-1 rounded-full bg-zinc-300 dark:bg-zinc-800" />
-                  <span className="font-medium text-zinc-950 dark:text-zinc-50">
+                  <span className="font-medium text-zinc-950 dark:text-zinc-50 cursor-pointer hover:underline">
                     Contact info
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  {applicant?.skills && applicant.skills.length > 0 ? (
-                    applicant.skills.slice(0, 3).map((skill) => (
-                      <Badge
-                        key={skill}
-                        className="h-8 rounded border-amber-900/30 bg-amber-900/40 text-amber-300"
-                      >
-                        {skill}
-                      </Badge>
-                    ))
-                  ) : (
-                    <p className="text-sm text-gray-400 italic">
-                      No skills listed
-                    </p>
-                  )}
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Core Strengths - Highlighted style */}
+                  {applicant?.extracted_profile?.profile_summary?.core_strengths?.map((strength) => (
+                    <Badge
+                      key={strength}
+                      className="h-8 rounded px-3 border-indigo-100 bg-indigo-50 text-indigo-700 dark:border-indigo-900/30 dark:bg-indigo-900/40 dark:text-indigo-300"
+                    >
+                      {strength}
+                    </Badge>
+                  ))}
+                  
+                  {/* Top Skills */}
+                  {(applicant?.extracted_profile?.skills || applicant?.skills)?.length ? (
+                    (applicant?.extracted_profile?.skills || applicant?.skills)
+                      .slice(0, 6)
+                      .map((skill) => (
+                        <Badge
+                          key={skill}
+                          className="h-8 rounded border-zinc-200 bg-white text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+                        >
+                          {skill}
+                        </Badge>
+                      ))
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -176,6 +201,7 @@ export default function ProfilePage() {
       {/* tabs content area */}
       <div className="min-h-screen flex-1 overflow-y-auto pb-10">
         {activeTab === "about" && <AboutTab />}
+        {activeTab === "experience" && <ExperienceTab />}
         {activeTab === "resume" && <ResumeDocsTab />}
         {activeTab === "preferences" && <PreferencesTab />}
         {activeTab === "projects" && <ProjectsTab />}

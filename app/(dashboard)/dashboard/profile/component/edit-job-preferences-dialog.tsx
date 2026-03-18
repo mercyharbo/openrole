@@ -90,17 +90,16 @@ export function EditJobPreferencesDialog() {
 
   useEffect(() => {
     if (isJobPreferencesDialogOpen && applicant) {
-      const prefs = (applicant.job_preferences as Partial<JobPrefsFormValues["job_preferences"]>) || {}
       form.reset({
         job_preferences: {
-          work_arrangement: prefs.work_arrangement || "remote",
-          job_types: Array.isArray(prefs.job_types) ? prefs.job_types : [],
-          willing_to_relocate: prefs.willing_to_relocate ?? false,
-          preferred_locations: prefs.preferred_locations || "",
-          notice_period: prefs.notice_period || "immediate",
-          earliest_start_date: prefs.earliest_start_date || "",
-          travel_willingness: prefs.travel_willingness || "none",
-          referral_source: prefs.referral_source || "",
+          work_arrangement: applicant.job_preferences?.work_arrangement || "remote",
+          job_types: Array.isArray(applicant.job_preferences?.job_types) ? applicant.job_preferences.job_types : [],
+          willing_to_relocate: applicant.job_preferences?.willing_to_relocate ?? false,
+          preferred_locations: Array.isArray(applicant.job_preferences?.preferred_locations) ? applicant.job_preferences.preferred_locations.join(", ") : "",
+          notice_period: applicant.job_preferences?.notice_period || "immediate",
+          earliest_start_date: applicant.job_preferences?.earliest_start_date || "",
+          travel_willingness: applicant.job_preferences?.travel_willingness || "none",
+          referral_source: applicant.job_preferences?.referral_source || "",
         },
       })
     }

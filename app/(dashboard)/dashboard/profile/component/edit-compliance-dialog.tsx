@@ -100,27 +100,27 @@ export function EditComplianceDialog() {
 
   useEffect(() => {
     if (isComplianceDialogOpen && applicant?.compliance_data) {
-      const data = applicant.compliance_data as ComplianceFormValues
       form.reset({
-        citizenship_status: data.citizenship_status || "",
-        visa_type: data.visa_type || "",
-        work_authorization: data.work_authorization ?? false,
-        requires_sponsorship: data.requires_sponsorship ?? false,
-        veteran_status: data.veteran_status || "",
-        protected_veteran: data.protected_veteran ?? false,
-        disability_status: data.disability_status || "no",
-        gender: data.gender || "male",
-        race_ethnicity: data.race_ethnicity || "",
-        right_to_work_us: data.right_to_work_us ?? false,
-        right_to_work_uk: data.right_to_work_uk ?? false,
-        right_to_work_eu: data.right_to_work_eu ?? false,
-        right_to_work_canada: data.right_to_work_canada ?? false,
-        right_to_work_australia: data.right_to_work_australia ?? false,
-        visa_expiry_date: data.visa_expiry_date || "",
-        security_clearance: data.security_clearance ?? false,
-        security_clearance_level: data.security_clearance_level || "",
-        criminal_conviction: data.criminal_conviction || "no",
-        criminal_explanation: data.criminal_explanation || "",
+        gender: applicant.compliance_data?.gender || "male",
+        right_to_work_eu: applicant.compliance_data?.right_to_work_eu ?? false,
+        right_to_work_uk: applicant.compliance_data?.right_to_work_uk ?? false,
+        right_to_work_us: applicant.compliance_data?.right_to_work_us ?? false,
+        disability_status: applicant.compliance_data?.disability_status || "no",
+        protected_veteran: applicant.compliance_data?.protected_veteran ?? false,
+        security_clearance: applicant.compliance_data?.security_clearance ?? false,
+        work_authorization: applicant.compliance_data?.work_authorization ?? false,
+        criminal_conviction: applicant.compliance_data?.criminal_conviction || "no",
+        requires_sponsorship: applicant.compliance_data?.requires_sponsorship ?? false,
+        right_to_work_canada: applicant.compliance_data?.right_to_work_canada ?? false,
+        right_to_work_australia: applicant.compliance_data?.right_to_work_australia ?? false,
+        // Match additional fields if they exist in the UI schema but not the core type yet, or just fallback
+        visa_type: (applicant.compliance_data as any)?.visa_type || "",
+        visa_expiry_date: (applicant.compliance_data as any)?.visa_expiry_date || "",
+        citizenship_status: (applicant.compliance_data as any)?.citizenship_status || "",
+        veteran_status: (applicant.compliance_data as any)?.veteran_status || "",
+        race_ethnicity: (applicant.compliance_data as any)?.race_ethnicity || "",
+        security_clearance_level: (applicant.compliance_data as any)?.security_clearance_level || "",
+        criminal_explanation: (applicant.compliance_data as any)?.criminal_explanation || "",
       })
     }
   }, [isComplianceDialogOpen, applicant, form])
