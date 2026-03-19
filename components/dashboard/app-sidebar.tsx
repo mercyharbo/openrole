@@ -10,7 +10,6 @@ import {
   Sparkles,
   User,
 } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import * as React from "react"
@@ -100,18 +99,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       }
       {...props}
     >
-      <SidebarHeader className="flex h-20 items-center px-6 pt-6">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-white/10 text-white">
-            <Image
-              src="/Container.png"
-              alt="Logo"
-              width={32}
-              height={32}
-              className="object-contain"
-            />
-          </div>
-          <span className="text-xl font-medium tracking-tight">IBK</span>
+      <SidebarHeader className="flex h-20 items-center px-0 pt-6">
+        <Link href="/" className="flex items-start justify-start gap-3">
+          <span className="text-xl font-bold">OPEN-ROLE</span>
         </Link>
       </SidebarHeader>
 

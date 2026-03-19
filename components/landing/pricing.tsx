@@ -41,7 +41,6 @@ const PricingContent = () => {
     const response = await post("/billing/checkout", { plan_slug: planSlug })
     
     if (response.error) {
-      console.error("Checkout failed:", response.error)
       toast.error(response.error)
       setIsProcessing(null)
     } else {
@@ -49,7 +48,7 @@ const PricingContent = () => {
       if (checkoutUrl) {
         window.location.href = checkoutUrl
       } else {
-        console.error("No checkout URL returned", response.data)
+        toast.error("Failed to initiate checkout")
         setIsProcessing(null)
       }
     }
@@ -65,7 +64,6 @@ const PricingContent = () => {
     const response = await post("/billing/topup", {})
     
     if (response.error) {
-      console.error("Top-up failed:", response.error)
       toast.error(response.error)
       setIsProcessing(null)
     } else {
@@ -73,7 +71,7 @@ const PricingContent = () => {
       if (checkoutUrl) {
         window.location.href = checkoutUrl
       } else {
-        console.error("No checkout URL returned", response.data)
+        toast.error("Failed to initiate top-up")
         setIsProcessing(null)
       }
     }

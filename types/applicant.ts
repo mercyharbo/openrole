@@ -47,6 +47,13 @@ export interface ComplianceData {
     requires_sponsorship: boolean | null
     right_to_work_canada: boolean | null
     right_to_work_australia: boolean | null
+    visa_type?: string | null
+    visa_expiry_date?: string | null
+    citizenship_status?: string | null
+    veteran_status?: string | null
+    race_ethnicity?: string | null
+    security_clearance_level?: string | null
+    criminal_explanation?: string | null
 }
 
 export interface EducationEntry {

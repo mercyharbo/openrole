@@ -114,13 +114,13 @@ export function EditComplianceDialog() {
         right_to_work_canada: applicant.compliance_data?.right_to_work_canada ?? false,
         right_to_work_australia: applicant.compliance_data?.right_to_work_australia ?? false,
         // Match additional fields if they exist in the UI schema but not the core type yet, or just fallback
-        visa_type: (applicant.compliance_data as any)?.visa_type || "",
-        visa_expiry_date: (applicant.compliance_data as any)?.visa_expiry_date || "",
-        citizenship_status: (applicant.compliance_data as any)?.citizenship_status || "",
-        veteran_status: (applicant.compliance_data as any)?.veteran_status || "",
-        race_ethnicity: (applicant.compliance_data as any)?.race_ethnicity || "",
-        security_clearance_level: (applicant.compliance_data as any)?.security_clearance_level || "",
-        criminal_explanation: (applicant.compliance_data as any)?.criminal_explanation || "",
+        visa_type: applicant.compliance_data?.visa_type || "",
+        visa_expiry_date: applicant.compliance_data?.visa_expiry_date || "",
+        citizenship_status: applicant.compliance_data?.citizenship_status || "",
+        veteran_status: applicant.compliance_data?.veteran_status || "",
+        race_ethnicity: applicant.compliance_data?.race_ethnicity || "",
+        security_clearance_level: applicant.compliance_data?.security_clearance_level || "",
+        criminal_explanation: applicant.compliance_data?.criminal_explanation || "",
       })
     }
   }, [isComplianceDialogOpen, applicant, form])

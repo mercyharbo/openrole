@@ -1,5 +1,7 @@
 "use client"
 
+import { PricingDialog } from "@/components/billing/pricing-dialog"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -151,9 +153,20 @@ export default function BillingPage() {
       {/* Current Plan Section */}
       <Card className="overflow-hidden border-zinc-200 dark:border-zinc-800 dark:bg-zinc-900">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-medium text-zinc-950 dark:text-zinc-50">
-            <CreditCard className="size-5 text-primary" />
-            Current Subscription
+          <CardTitle className="flex items-center justify-between text-lg font-medium text-zinc-950 dark:text-zinc-50">
+            <div className="flex items-center gap-2">
+              <CreditCard className="size-5 text-primary" />
+              Current Subscription
+            </div>
+            <PricingDialog>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary text-primary dark:border-primary dark:text-primary"
+              >
+                Upgrade
+              </Button>
+            </PricingDialog>
           </CardTitle>
         </CardHeader>
         <Separator />
@@ -165,17 +178,20 @@ export default function BillingPage() {
                 Current Plan
               </span>
               <h3 className="mb-1 text-4xl font-bold text-zinc-950 dark:text-zinc-50">
-                {subscription?.plan.name || "Free Trial"}
+                {subscription?.plan?.name || "Free Trial"}
               </h3>
               <p className="text-sm font-medium text-zinc-700 capitalize dark:text-zinc-400">
-                {subscription?.plan.billing_period} billing
+                {subscription?.plan?.billing_period || "Monthly"} billing
               </p>
               <div className="mt-6 flex items-baseline gap-1">
                 <span className="text-5xl font-bold text-zinc-950 dark:text-zinc-50">
-                  ${((subscription?.plan.price_cents ?? 0) / 100).toFixed(2)}
+                  ${((subscription?.plan?.price_cents ?? 0) / 100).toFixed(2)}
                 </span>
                 <span className="text-sm font-medium text-zinc-700 dark:text-zinc-400">
-                  /mo
+                  /
+                  {subscription?.plan?.billing_period === "yearly"
+                    ? "yr"
+                    : "mo"}
                 </span>
               </div>
             </div>
@@ -191,12 +207,16 @@ export default function BillingPage() {
                     <ul className="space-y-3">
                       <li className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-zinc-200">
                         <CheckCircle2 className="size-4 text-green-700 dark:text-green-400" />
-                        {subscription?.plan.applications_per_month.toLocaleString()}{" "}
+                        {(
+                          subscription?.plan?.applications_per_month ?? 0
+                        ).toLocaleString()}{" "}
                         applications per month
                       </li>
                       <li className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-zinc-200">
                         <CheckCircle2 className="size-4 text-green-700 dark:text-green-400" />
-                        {subscription?.plan.credits_per_month.toLocaleString()}{" "}
+                        {(
+                          subscription?.plan?.credits_per_month ?? 0
+                        ).toLocaleString()}{" "}
                         AI credits included
                       </li>
                       <li className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-zinc-200">
@@ -362,7 +382,10 @@ export default function BillingPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right text-sm font-medium text-gray-700 dark:text-zinc-300">
-                        {format(new Date(item.created_at || new Date()), "MMM dd, yyyy")}
+                        {format(
+                          new Date(item.created_at || new Date()),
+                          "MMM dd, yyyy"
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
