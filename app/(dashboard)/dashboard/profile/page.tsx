@@ -17,6 +17,7 @@ import { ProjectsTab } from "./component/projects-tab"
 import { ResumeDocsTab } from "./component/resume-docs-tab"
 
 const tabs = [
+  { label: "About", id: "about" },
   { label: "Preferences", id: "preferences" },
   { label: "Experience", id: "experience" },
   { label: "Projects", id: "projects" },

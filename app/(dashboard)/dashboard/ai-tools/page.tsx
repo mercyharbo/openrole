@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator"
 import NextImage from "next/image"
 import { ResumeCard } from "./components/resume-card"
 import { SmartAssistCard } from "./components/smart-assist-card"
+import { useResumes } from "@/hooks/use-resumes"
 
 const GENERATORS = [
   {
@@ -21,17 +22,9 @@ const GENERATORS = [
   },
 ]
 
-const RESUMES = [
-  {
-    id: "1",
-    name: "Johnbull Updated 1",
-    date: "Jan 12, 2026",
-    time: "12:05 PM",
-    preview: "/resume-previews/1.png", // Placeholder
-  },
-]
-
 export default function ToolsPage() {
+  const { resumes, deleteResume, isLoaded } = useResumes()
+
   return (
     <div className="flex flex-col gap-8 pb-10">
       <Card className="relative overflow-hidden">
@@ -84,11 +77,28 @@ export default function ToolsPage() {
         </CardHeader>
         <Separator />
         <CardContent className="p-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3">
-            {RESUMES.map((resume) => (
-              <ResumeCard key={resume.id} resume={resume} />
-            ))}
-          </div>
+          {!isLoaded ? (
+            <div className="flex h-32 items-center justify-center text-zinc-500">
+              Loading resumes...
+            </div>
+          ) : resumes.length > 0 ? (
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-4">
+              {resumes.map((resume) => (
+                <ResumeCard 
+                  key={resume.id} 
+                  resume={resume} 
+                  onDelete={deleteResume}
+                  isSaved={true}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <p className="text-zinc-500 dark:text-zinc-400">
+                No resumes saved yet. Use the generator to create one!
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

@@ -1,25 +1,49 @@
 "use client"
 
 import { Separator } from "@/components/ui/separator"
-import { FileText, MoreHorizontal } from "lucide-react"
+import { FileText, MoreHorizontal, Download, Trash2, Plus } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import { Resume } from "@/lib/types/resume"
 
 interface ResumeCardProps {
-  resume: {
-    id: string
-    name: string
-    date: string
-    time: string
-    preview?: string
-    file_url?: string
-    format?: string
-  }
+  resume: Resume
+  onDelete?: (id: string) => void
+  onSave?: (resume: Resume) => void
+  isSaved?: boolean
 }
 
 /**
  * ResumeCard component for displaying generated resumes.
  * Includes PDF badge, name, preview placeholder, and generation date.
  */
-export function ResumeCard({ resume }: ResumeCardProps) {
+export function ResumeCard({ resume, onDelete, onSave, isSaved }: ResumeCardProps) {
+  const handleDownload = async () => {
+    if (!resume.file_url) return
+    
+    try {
+      const response = await fetch(resume.file_url)
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `${resume.name}.${resume.format || "pdf"}`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error("Download failed:", error)
+      // Fallback: just open in new tab
+      window.open(resume.file_url, "_blank")
+    }
+  }
+
   return (
     <div className="group flex flex-col overflow-hidden rounded-md border border-gray-100 bg-white transition-all dark:border-zinc-800 dark:bg-zinc-900/40">
       {/* Resume Header */}
@@ -35,9 +59,40 @@ export function ResumeCard({ resume }: ResumeCardProps) {
             {resume.name}
           </span>
         </div>
-        <button className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 dark:text-gray-500 dark:hover:bg-zinc-800">
-          <MoreHorizontal className="size-5" />
-        </button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 dark:text-gray-500 dark:hover:bg-zinc-800">
+              <MoreHorizontal className="size-5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuItem onClick={handleDownload}>
+              <Download className="mr-2 size-4 text-gray-500" />
+              <span>Download PDF</span>
+            </DropdownMenuItem>
+            
+            {onSave && !isSaved && (
+              <DropdownMenuItem onClick={() => onSave(resume)}>
+                <Plus className="mr-2 size-4 text-gray-500" />
+                <span>Save to Dashboard</span>
+              </DropdownMenuItem>
+            )}
+            
+            {onDelete && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  variant="destructive" 
+                  onClick={() => onDelete(resume.id)}
+                >
+                  <Trash2 className="mr-2 size-4 text-destructive" />
+                  <span>Delete</span>
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Resume Preview Placeholder */}

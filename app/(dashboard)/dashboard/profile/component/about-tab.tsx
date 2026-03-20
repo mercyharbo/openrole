@@ -178,13 +178,13 @@ export function AboutTab() {
                   <Button
                     key={social.label}
                     variant="outline"
-                    className="w-full justify-start gap-5 bg-emerald-900/40 text-emerald-300 border-emerald-900/30 hover:bg-emerald-900/50 transition-colors"
+                    className="w-full justify-start gap-4 overflow-hidden bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100 transition-colors dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-900/30 dark:hover:bg-emerald-900/50"
                     asChild
                     size={'lg'}
                   >
                     <Link href={social.url} target="_blank">
-                      <Icon className="size-4" />
-                      {social.label}
+                      <Icon className="size-4 shrink-0" />
+                      <span className="truncate">{social.label}</span>
                     </Link>
                   </Button>
                 )
@@ -193,12 +193,12 @@ export function AboutTab() {
                 <Button
                   key={social.label}
                   variant="outline"
-                  className="w-full justify-start gap-5 text-zinc-500 cursor-not-allowed border-zinc-200 dark:border-zinc-800"
+                  className="w-full justify-start gap-4 overflow-hidden text-zinc-500 cursor-not-allowed border-zinc-200 dark:border-zinc-800"
                   disabled
                   size={'lg'}
                 >
-                  <Icon className="size-4" />
-                  {social.label} (Not added)
+                  <Icon className="size-4 shrink-0" />
+                  <span className="truncate">{social.label} (Not added)</span>
                 </Button>
               )
             })}

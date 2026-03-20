@@ -20,6 +20,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { useApi } from "@/hooks/use-api"
 import { toast } from "react-toastify"
+import { useResumes } from "@/hooks/use-resumes"
 import { ResumeCard } from "./resume-card"
 
 interface ResumeGeneratorSheetProps {
@@ -27,21 +28,6 @@ interface ResumeGeneratorSheetProps {
   onOpenChange: (open: boolean) => void
 }
 
-interface GeneratedResume {
-  id: string
-  name: string
-  date: string
-  time: string
-  preview: string
-  file_url: string
-  format: string
-}
-
-/**
- * ResumeGeneratorSheet component.
- * Allows users to configure and generate an AI resume.
- * Displays the generated resume in the response section.
- */
 export function ResumeGeneratorSheet({
   isOpen,
   onOpenChange,
@@ -51,10 +37,11 @@ export function ResumeGeneratorSheet({
   const [modifications, setModifications] = useState("")
   const [jobDescription, setJobDescription] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [generatedResume, setGeneratedResume] = useState<GeneratedResume | null>(null)
+  const [generatedResume, setGeneratedResume] = useState<any | null>(null)
   const [apiError, setApiError] = useState<string | null>(null)
 
   const { post } = useApi()
+  const { saveResume, resumes } = useResumes()
 
   const handleGenerateResume = async () => {
     setIsLoading(true)
@@ -202,7 +189,11 @@ export function ResumeGeneratorSheet({
               Response
             </h3>
             {generatedResume ? (
-              <ResumeCard resume={generatedResume} />
+              <ResumeCard 
+                resume={generatedResume} 
+                onSave={saveResume}
+                isSaved={resumes.some(r => r.file_url === generatedResume.file_url)}
+              />
             ) : (
               <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 py-12 dark:border-zinc-800">
                 <p className="text-sm text-gray-500 dark:text-zinc-400">

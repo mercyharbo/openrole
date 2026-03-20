@@ -16,15 +16,19 @@ import {
   Activity,
   Zap,
 } from "lucide-react"
-import Link from "next/link"
+import { OverviewSkeleton } from "@/components/dashboard/overview-skeleton"
 
 /**
  * Dashboard Overview page.
  * Displays key metrics and pending applications.
  */
 export default function OverviewPage() {
-  useApplicantProfile()
-  const { stats } = useAutoApplyStats()
+  const { isLoading: isProfileLoading } = useApplicantProfile()
+  const { stats, isLoading: isStatsLoading } = useAutoApplyStats()
+
+  if (isProfileLoading || isStatsLoading) {
+    return <OverviewSkeleton />
+  }
 
   const liveMetrics = [
     {
@@ -73,47 +77,17 @@ export default function OverviewPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2 min-h-[400px]">
-          <CardHeader>
-            <CardTitle className="text-lg">Recent Applications</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-gray-50 text-gray-400 dark:bg-zinc-900">
-              <Briefcase size={32} />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">No applications yet</h3>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Start exploring jobs to see your application history here.</p>
-            <Button className="mt-8 gap-2" asChild>
-              <Link href="/dashboard/jobs">Explore Jobs</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Profile Completion or Suggested Jobs */}
-        <Card className="h-full min-h-[400px] lg:col-span-1">
-          <CardHeader>
-            <CardTitle className="text-lg">Profile Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-             <div className="space-y-6">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Completion</span>
-                    <span className="font-medium">35%</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-zinc-800">
-                    <div className="h-full w-[35%] rounded-full bg-primary" />
-                  </div>
-                </div>
-                <p className="text-sm text-gray-500">Complete your profile to increase your chances of getting hired by 5x.</p>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/dashboard/profile">Edit Profile</Link>
-                </Button>
-             </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Coming Soon Section */}
+      <Card className="flex min-h-[400px] flex-col items-center justify-center border-dashed border-gray-200 bg-gray-50/30 text-center dark:border-zinc-800 dark:bg-zinc-900/10">
+        <div className="mb-4 flex size-20 items-center justify-center rounded-2xl bg-white shadow-sm dark:bg-zinc-900">
+          <Zap size={40} className="animate-pulse text-primary" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Coming Soon</h2>
+        <p className="mt-2 max-w-sm text-gray-500 dark:text-gray-400">
+          We're working on something amazing! Your application history and 
+          suggested jobs will be available here very soon.
+        </p>
+      </Card>
     </main>
   )
 }
