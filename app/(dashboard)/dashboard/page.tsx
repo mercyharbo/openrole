@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardAction,
@@ -84,7 +83,7 @@ export default function OverviewPage() {
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Coming Soon</h2>
         <p className="mt-2 max-w-sm text-gray-500 dark:text-gray-400">
-          We're working on something amazing! Your application history and 
+          We&apos;re working on something amazing! Your application history and 
           suggested jobs will be available here very soon.
         </p>
       </Card>

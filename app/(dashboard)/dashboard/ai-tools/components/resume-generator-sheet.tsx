@@ -22,6 +22,7 @@ import { useApi } from "@/hooks/use-api"
 import { toast } from "react-toastify"
 import { useResumes } from "@/hooks/use-resumes"
 import { ResumeCard } from "./resume-card"
+import { Resume } from "@/lib/types/resume"
 
 interface ResumeGeneratorSheetProps {
   isOpen: boolean
@@ -37,7 +38,7 @@ export function ResumeGeneratorSheet({
   const [modifications, setModifications] = useState("")
   const [jobDescription, setJobDescription] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [generatedResume, setGeneratedResume] = useState<any | null>(null)
+  const [generatedResume, setGeneratedResume] = useState<Resume | null>(null)
   const [apiError, setApiError] = useState<string | null>(null)
 
   const { post } = useApi()

@@ -10,29 +10,25 @@ const STORAGE_KEY = "xjobs_stored_resumes"
  * Hook for managing persisted resumes in localStorage.
  */
 export function useResumes() {
-  const [resumes, setResumes] = useState<Resume[]>([])
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  // Load from localStorage on mount
-  useEffect(() => {
+  const [resumes, setResumes] = useState<Resume[]>(() => {
+    if (typeof window === "undefined") return []
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       try {
-        setResumes(JSON.parse(stored))
+        return JSON.parse(stored)
       } catch (error) {
         console.error("Failed to parse stored resumes", error)
-        setResumes([])
+        return []
       }
     }
-    setIsLoaded(true)
-  }, [])
+    return []
+  })
+  const [isLoaded] = useState(true)
 
   // Sync with localStorage whenever resumes change
   useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(resumes))
-    }
-  }, [resumes, isLoaded])
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(resumes))
+  }, [resumes])
 
   const saveResume = (resume: Resume) => {
     setResumes((prev) => {
