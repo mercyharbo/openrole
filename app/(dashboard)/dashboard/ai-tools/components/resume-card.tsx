@@ -9,12 +9,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
-import { Resume } from "@/lib/types/resume"
+import { Generation } from "@/lib/types/generation"
 
 interface ResumeCardProps {
-  resume: Resume
+  resume: Generation
   onDelete?: (id: string) => void
-  onSave?: (resume: Resume) => void
+  onSave?: (resume: Generation) => void
   isSaved?: boolean
 }
 
@@ -32,7 +32,9 @@ export function ResumeCard({ resume, onDelete, onSave, isSaved }: ResumeCardProp
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement("a")
       link.href = url
-      link.download = `${resume.name}.${resume.format || "pdf"}`
+      const format = resume.metadata?.format || "pdf"
+      const name = resume.metadata?.name || `Resume_${resume.id.slice(0, 5)}`
+      link.download = `${name}.${format}`
       document.body.appendChild(link)
       link.click()
       link.remove()
@@ -44,6 +46,17 @@ export function ResumeCard({ resume, onDelete, onSave, isSaved }: ResumeCardProp
     }
   }
 
+  const createdAt = new Date(resume.created_at)
+  const dateStr = createdAt.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  })
+  const timeStr = createdAt.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+
   return (
     <div className="group flex flex-col overflow-hidden rounded-md border border-gray-100 bg-white transition-all dark:border-zinc-800 dark:bg-zinc-900/40">
       {/* Resume Header */}
@@ -52,11 +65,11 @@ export function ResumeCard({ resume, onDelete, onSave, isSaved }: ResumeCardProp
           <div className="relative flex size-10 items-center justify-center rounded-lg border border-gray-100 bg-gray-50 dark:border-zinc-800 dark:bg-zinc-900">
             <FileText className="size-5 text-gray-400 dark:text-gray-500" />
             <div className="absolute -right-1 -bottom-1 flex h-3.5 px-1.5 items-center justify-center rounded-sm bg-gray-200 text-[7px] font-bold text-gray-600 dark:bg-zinc-800 dark:text-gray-400">
-              {resume.format?.toUpperCase() || "PDF"}
+              {(resume.metadata?.format || "pdf").toUpperCase()}
             </div>
           </div>
           <span className="text-[15px] font-medium text-gray-900 dark:text-gray-100">
-            {resume.name}
+            {resume.metadata?.name || `Resume (${(resume.metadata?.format || "pdf").toUpperCase()})`}
           </span>
         </div>
         
@@ -116,7 +129,7 @@ export function ResumeCard({ resume, onDelete, onSave, isSaved }: ResumeCardProp
       <div className="flex items-center justify-between px-5 py-4 text-xs font-medium text-gray-500 dark:text-gray-400">
         <span>Generated on</span>
         <span>
-          {resume.date} • {resume.time}
+          {dateStr} • {timeStr}
         </span>
       </div>
     </div>

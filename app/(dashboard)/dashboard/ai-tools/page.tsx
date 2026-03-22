@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator"
 import NextImage from "next/image"
 import { ResumeCard } from "./components/resume-card"
 import { SmartAssistCard } from "./components/smart-assist-card"
-import { useResumes } from "@/hooks/use-resumes"
+import { useGenerations } from "@/hooks/use-generations"
 
 const GENERATORS = [
   {
@@ -23,7 +23,7 @@ const GENERATORS = [
 ]
 
 export default function ToolsPage() {
-  const { resumes, deleteResume, isLoaded } = useResumes()
+  const { generations: resumes, isLoading } = useGenerations('resume')
 
   return (
     <div className="flex flex-col gap-8 pb-10">
@@ -77,7 +77,7 @@ export default function ToolsPage() {
         </CardHeader>
         <Separator />
         <CardContent className="p-8">
-          {!isLoaded ? (
+          {isLoading ? (
             <div className="flex h-32 items-center justify-center text-zinc-500">
               Loading resumes...
             </div>
@@ -87,7 +87,6 @@ export default function ToolsPage() {
                 <ResumeCard 
                   key={resume.id} 
                   resume={resume} 
-                  onDelete={deleteResume}
                   isSaved={true}
                 />
               ))}

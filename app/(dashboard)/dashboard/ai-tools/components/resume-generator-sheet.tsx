@@ -20,9 +20,9 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { useApi } from "@/hooks/use-api"
 import { toast } from "react-toastify"
-import { useResumes } from "@/hooks/use-resumes"
+import { useGenerations } from "@/hooks/use-generations"
 import { ResumeCard } from "./resume-card"
-import { Resume } from "@/lib/types/resume"
+import { Generation } from "@/lib/types/generation"
 
 interface ResumeGeneratorSheetProps {
   isOpen: boolean
@@ -38,11 +38,11 @@ export function ResumeGeneratorSheet({
   const [modifications, setModifications] = useState("")
   const [jobDescription, setJobDescription] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [generatedResume, setGeneratedResume] = useState<Resume | null>(null)
+  const [generatedResume, setGeneratedResume] = useState<Generation | null>(null)
   const [apiError, setApiError] = useState<string | null>(null)
 
   const { post } = useApi()
-  const { saveResume, resumes } = useResumes()
+  const { refreshGenerations, generations: resumes } = useGenerations('resume')
 
   const handleGenerateResume = async () => {
     setIsLoading(true)
@@ -63,21 +63,18 @@ export function ResumeGeneratorSheet({
       const resumeData = data.data || data
       
       setGeneratedResume({
-        id: Math.random().toString(36).substr(2, 9),
-        name: `Resume (${resumeData.format.toUpperCase()})`,
-        date: new Date().toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        }),
-        time: new Date().toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        preview: "/resume-previews/1.png", // Default preview or thumbnail if available
+        id: resumeData.id || Math.random().toString(36).substr(2, 9),
+        type: 'resume',
+        content: resumeData.content || "",
         file_url: resumeData.file_url,
-        format: resumeData.format,
+        metadata: {
+          format: resumeData.format,
+          name: `Resume (${resumeData.format.toUpperCase()})`,
+        },
+        created_at: new Date().toISOString(),
       })
+      
+      refreshGenerations?.()
       toast.success("Resume generated successfully!")
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error generating resume. Please try again."
@@ -192,8 +189,7 @@ export function ResumeGeneratorSheet({
             {generatedResume ? (
               <ResumeCard 
                 resume={generatedResume} 
-                onSave={saveResume}
-                isSaved={resumes.some(r => r.file_url === generatedResume.file_url)}
+                isSaved={true}
               />
             ) : (
               <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 py-12 dark:border-zinc-800">

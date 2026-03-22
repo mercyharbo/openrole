@@ -13,6 +13,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { useApi } from "@/hooks/use-api"
 import { toast } from "react-toastify"
+import { useGenerations } from "@/hooks/use-generations"
 
 interface CoverLetterGeneratorSheetProps {
   isOpen: boolean
@@ -34,6 +35,7 @@ export function CoverLetterGeneratorSheet({
   const [apiError, setApiError] = useState<string | null>(null)
 
   const { post } = useApi()
+  const { refreshGenerations } = useGenerations('cover_letter')
 
   const handleGenerate = async () => {
     if (!jobDescription.trim()) {
@@ -55,6 +57,7 @@ export function CoverLetterGeneratorSheet({
       // Unwrap envelope if it exists
       const content = data.data?.content || data.content
       setGeneratedContent(content)
+      refreshGenerations?.()
       toast.success("Cover letter generated successfully!")
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error generating cover letter. Please try again."

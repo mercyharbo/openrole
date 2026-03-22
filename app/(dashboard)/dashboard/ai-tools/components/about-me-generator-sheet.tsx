@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sheet"
 import { useApi } from "@/hooks/use-api"
 import { toast } from "react-toastify"
+import { useGenerations } from "@/hooks/use-generations"
 
 interface AboutMeGeneratorSheetProps {
   isOpen: boolean
@@ -41,6 +42,7 @@ export function AboutMeGeneratorSheet({
   const [apiError, setApiError] = useState<string | null>(null)
 
   const { post } = useApi()
+  const { refreshGenerations } = useGenerations('about_me')
 
   const handleGenerate = async () => {
     setIsLoading(true)
@@ -58,6 +60,7 @@ export function AboutMeGeneratorSheet({
       // Unwrap envelope if it exists
       const content = data.data?.content || data.content
       setGeneratedContent(content)
+      refreshGenerations?.()
       toast.success("About me generated successfully!")
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error generating about me. Please try again."

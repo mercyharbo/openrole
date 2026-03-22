@@ -176,7 +176,7 @@ function LoginForm() {
                 type="email"
                 placeholder="Enter email address"
                 className={cn(
-                  "border-auth-border rounded-auth-input focus-visible:ring-auth-input-focus h-12 bg-white px-4 text-sm placeholder:text-black/40 dark:border-zinc-800 dark:bg-zinc-950 dark:placeholder:text-white/40",
+                  "border-auth-border rounded-auth-input focus-visible:ring-auth-input-focus h-12 bg-white px-4 placeholder:text-black/40 dark:border-zinc-800 dark:bg-zinc-950 dark:placeholder:text-white/40",
                   errors.email && "border-red-500 focus-visible:ring-red-500"
                 )}
               />
@@ -202,7 +202,7 @@ function LoginForm() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter Password"
                   className={cn(
-                    "border-auth-border rounded-auth-input focus-visible:ring-auth-input-focus h-12 bg-white px-4 pr-12 text-sm placeholder:text-black/40 dark:border-zinc-800 dark:bg-zinc-950 dark:placeholder:text-white/40",
+                    "border-auth-border rounded-auth-input focus-visible:ring-auth-input-focus h-12 bg-white px-4 pr-12 placeholder:text-black/40 dark:border-zinc-800 dark:bg-zinc-950 dark:placeholder:text-white/40",
                     errors.password &&
                       "border-red-500 focus-visible:ring-red-500"
                   )}
